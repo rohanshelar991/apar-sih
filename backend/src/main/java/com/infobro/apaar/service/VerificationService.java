@@ -8,6 +8,7 @@ import com.infobro.apaar.repository.StudentRepository;
 import com.infobro.apaar.repository.VerificationRequestRepository;
 import com.infobro.apaar.repository.VerificationTokenRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -15,6 +16,9 @@ import java.util.*;
 
 @Service
 public class VerificationService {
+
+    @Value("${apaar.verify-token.ttl-minutes:4320}")
+    private long defaultTokenTtlMinutes;
 
     private final VerificationTokenRepository tokenRepository;
     private final VerificationRequestRepository requestRepository;
@@ -48,9 +52,9 @@ public class VerificationService {
                 ? request.getAllowedFields()
                 : "NAME,APAAR,INSTITUTION,PROGRAMME,ADMISSION_YEAR,STATUS";
 
-        LocalDateTime expiresAt = LocalDateTime.now().plusHours(
-                request.getExpiryHours() > 0 ? request.getExpiryHours() : 72
-        );
+        LocalDateTime expiresAt = request.getExpiryHours() > 0
+                ? LocalDateTime.now().plusHours(request.getExpiryHours())
+                : LocalDateTime.now().plusMinutes(defaultTokenTtlMinutes);
 
         VerificationToken token = new VerificationToken(
                 student,

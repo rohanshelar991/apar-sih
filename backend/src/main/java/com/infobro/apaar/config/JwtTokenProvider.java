@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import jakarta.annotation.PostConstruct;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,11 +19,17 @@ public class JwtTokenProvider {
 
     private static final Logger log = LoggerFactory.getLogger(JwtTokenProvider.class);
 
-    @Value("${apaar.jwt.secret:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}")
+    @Value("${apaar.jwt.secret}")
     private String jwtSecret;
 
-    @Value("${apaar.jwt.expiration-ms:86400000}")
+    @Value("#{${apaar.jwt.expiry-minutes:1440} * 60000L}")
     private long jwtExpirationMs;
+
+    @PostConstruct
+    void validateConfiguration() {
+        getSigningKey();
+        if (jwtExpirationMs <= 0) throw new IllegalStateException("JWT_EXPIRY_MINUTES must be positive");
+    }
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
