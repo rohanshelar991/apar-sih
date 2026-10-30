@@ -392,3 +392,35 @@ APPAR ID AUTHENIQ/
 ---
 
 *Crafted with precision by Team AuthenIQ for Smart India Hackathon 2026.*
+
+## PostgreSQL 16, Flyway, and production database setup
+
+The zero-setup H2 demo remains the default (`create-drop`, Flyway off, demo data
+on). The `postgres` profile now uses versioned Flyway migrations for all **10**
+JPA tables and Hibernate `validate`, with separate application and migration
+credentials. Production never seeds demo accounts; local PostgreSQL demos
+require `postgres,dev` and `SEED_DEMO_DATA=true` explicitly.
+
+Start with [backend/.env.example](backend/.env.example) and follow
+[docs/DATABASE.md](docs/DATABASE.md) for environment loading, local Compose,
+role creation, migrations, Supabase/Neon demos, and private AWS RDS deployment
+in `ap-south-1`. These instructions supersede the older Docker shortcut above.
+Spring Boot does not automatically load `.env` files.
+
+```powershell
+# After Java 17 and Maven are available:
+mvn -f "backend/pom.xml" test
+# H2: no database configuration needed in a fresh environment.
+mvn -f "backend/pom.xml" spring-boot:run
+# PostgreSQL: load env vars and provision roles as documented first.
+mvn -f "backend/pom.xml" flyway:migrate
+```
+
+The README ERD above is abbreviated: the implemented schema additionally has
+`user_accounts`, `verification_requests`, programme codes and record timestamps.
+Academic/admission years are integers; audit entity IDs are VARCHAR(64).
+Timestamps remain without time zone to match current entities, with UTC JDBC
+configuration. The migration files are the authoritative database schema.
+
+The PostgreSQL 16 integration tests skip cleanly without Docker. Run the full
+suite with Docker available before deploying to production.
