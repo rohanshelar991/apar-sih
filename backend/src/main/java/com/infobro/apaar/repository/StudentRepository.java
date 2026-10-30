@@ -24,6 +24,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
         String apaarId, Long institutionId, Long programmeId, Integer admissionYear
     );
 
+    List<Student> findByApaarIdAndInstitutionIdAndAdmissionYearAndVerificationStatusIn(
+        String apaarId, Long institutionId, Integer admissionYear, List<String> statuses
+    );
+
     Page<Student> findByInstitutionId(Long institutionId, Pageable pageable);
 
     @Query("SELECT s FROM Student s WHERE " +
@@ -74,7 +78,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("SELECT s.institution.id, COUNT(s) FROM Student s GROUP BY s.institution.id")
     List<Object[]> countGroupedByInstitution();
 
-    @Query("SELECT s FROM Student s WHERE s.apaarId IN (" +
+    @Query("SELECT s FROM Student s WHERE s.admissionYear = :year AND s.apaarId IN (" +
            "SELECT s2.apaarId FROM Student s2 WHERE s2.admissionYear = :year GROUP BY s2.apaarId HAVING COUNT(DISTINCT s2.institution.id) > 1)")
     List<Student> findCrossInstitutionDuplicates(@Param("year") Integer year);
 

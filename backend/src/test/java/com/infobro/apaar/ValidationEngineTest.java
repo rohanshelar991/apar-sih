@@ -59,7 +59,7 @@ public class ValidationEngineTest {
                     if ("findByApaarId".equals(name)) {
                         return apaarListResult;
                     }
-                    if ("findByApaarIdAndInstitutionIdAndProgrammeIdAndAdmissionYear".equals(name)) {
+                    if ("findByApaarIdAndInstitutionIdAndAdmissionYearAndVerificationStatusIn".equals(name)) {
                         return sameInstResult;
                     }
                     if ("findByApaarIdAndAdmissionYear".equals(name)) {
@@ -157,12 +157,15 @@ public class ValidationEngineTest {
     }
 
     @Test
-    @DisplayName("Rule 4: DUPLICATE_SAME_INSTITUTION flags already enrolled in same institution/programme/year")
+    @DisplayName("Rule 4: DUPLICATE_SAME_INSTITUTION flags already enrolled in same institution/year across programmes")
     void testDuplicateSameInstitution() {
         Student s = createValidStudent();
 
         Student existing = createValidStudent();
         existing.setId(999L);
+        Programme otherProgramme = new Programme(testInst, "Electronics", "ECE", 2026, 120, 0);
+        otherProgramme.setId(11L);
+        existing.setProgramme(otherProgramme);
         sameInstResult = Collections.singletonList(existing);
 
         ValidationResult res = validationEngine.validateStudent(s, new HashSet<>(), false);

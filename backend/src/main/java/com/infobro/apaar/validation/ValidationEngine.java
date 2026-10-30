@@ -172,12 +172,12 @@ public class ValidationEngine {
         }
 
         // 5. Duplicate in Same Institution Check
-        if (student.getInstitution() != null && student.getProgramme() != null && student.getAdmissionYear() != null) {
-            List<Student> sameInstDuplicates = studentRepository.findByApaarIdAndInstitutionIdAndProgrammeIdAndAdmissionYear(
+        if (student.getInstitution() != null && student.getAdmissionYear() != null) {
+            List<Student> sameInstDuplicates = studentRepository.findByApaarIdAndInstitutionIdAndAdmissionYearAndVerificationStatusIn(
                 normalizedApaar,
                 student.getInstitution().getId(),
-                student.getProgramme().getId(),
-                student.getAdmissionYear()
+                student.getAdmissionYear(),
+                Arrays.asList("VALID", "PENDING", "VERIFIED")
             );
             boolean isSameInstDup = sameInstDuplicates.stream()
                 .anyMatch(s -> student.getId() == null || !s.getId().equals(student.getId()));
@@ -186,7 +186,7 @@ public class ValidationEngine {
                     ValidationRuleCode.DUPLICATE_SAME_INSTITUTION,
                     "ERROR",
                     "Student with APAAR ID " + normalizedApaar + " is already enrolled in " +
-                    student.getProgramme().getName() + " for academic year " + student.getAdmissionYear() + ".",
+                    student.getInstitution().getName() + " for academic year " + student.getAdmissionYear() + ".",
                     "Update existing student record instead of submitting duplicate enrolment."
                 );
             }
