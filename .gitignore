@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Build Outputs
+dist/
+build/
+target/
+*.class
+
+# Testing & Temporary Scratch Files
+test_*.mp3
+test_*.png
+test_*.mp4
+*.log
+
+# Portable Maven Tooling (users run mvn or mvnw)
+tools/
+.mvn/wrapper/maven-wrapper.jar
+
+# Environment and Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE & OS Specific
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

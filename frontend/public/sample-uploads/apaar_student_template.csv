@@ -1,0 +1,6 @@
+apaar_id,name,dob,gender,programme,admission_year,category,email,phone
+123456789012,Suresh Kumar,2005-04-12,Male,CSE,2026,REGULAR,suresh.kumar@bmsce.ac.in,9876501234
+123456789013,Pooja Sharma,2005-08-25,Female,ECE,2026,REGULAR,pooja.sharma@bmsce.ac.in,9876501235
+123456789014,Rahul Nair,2004-11-03,Male,ME,2026,SUPERNUMERARY,rahul.nair@bmsce.ac.in,9876501236
+123456789015,Divya Reddy,2005-01-19,Female,CE,2026,REGULAR,divya.reddy@bmsce.ac.in,9876501237
+123456789016,Farhan Ahmed,2003-09-14,Male,MBA,2026,NRI,farhan.ahmed@bmsce.ac.in,9876501238
