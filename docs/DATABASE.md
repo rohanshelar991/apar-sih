@@ -215,6 +215,17 @@ this procedure for PostgreSQL.
 
 ## Supabase or Neon demo
 
+The approved Supabase demo runs PostgreSQL **17.11**. AWS RDS and the default
+Testcontainers target remain PostgreSQL **16**. V1/V2 use SQL available on both
+versions; applied migrations remain unchanged. Flyway is pinned to 10.20.1 so
+its PostgreSQL support covers version 17 as well as 16.
+
+When using a Supabase session pooler with custom database roles, use its
+`<role>.<project-reference>` login format for `DB_USERNAME` and `FLYWAY_USER`;
+the server-side roles remain `apaar_app` and `apaar_migrator`. Both identities
+have been verified against the approved demo. The application uses JDBC, not
+Supabase's HTTP API; no publishable key, API secret key, or JWKS URL is required.
+
 1. Create a fresh PostgreSQL project/database, preferably PostgreSQL 16 where
    offered. Copy its **direct database** host, port and database name from the
    provider dashboard. For Supabase, direct endpoints may require IPv6; use a
@@ -276,6 +287,32 @@ with Hibernate `validate` and the app identity, and verifies partial uniqueness,
 cross-institution reporting, denied app DDL, and append-only log/history grants.
 Docker is unavailable on the development machine, so its four tests skip.
 **Run them in Docker-enabled CI before a production deployment.**
+
+### Opt-in live database checks
+
+`ExternalPostgresSmokeTest` is disabled unless `RUN_EXTERNAL_DB_TESTS=true`.
+After loading your private environment file as described above:
+
+```powershell
+$env:RUN_EXTERNAL_DB_TESTS = "true"
+mvn -f "backend/pom.xml" "-Dtest=ExternalPostgresSmokeTest" test
+Remove-Item -LiteralPath "Env:\RUN_EXTERNAL_DB_TESTS"
+```
+
+Run this only against an approved demo/test database. It validates all 10 tables
+and their 10 foreign keys, Hibernate startup, Flyway checksums, app-role CRUD,
+partial uniqueness, reporting year boundaries, append-only permissions, and
+denied table creation. Test records are transactional and rolled back, including
+audit inserts; identity sequence counters may advance. Startup still runs any
+pending Flyway migrations, so review them first. The test requires no secrets
+in source code and is skipped by the ordinary local test command.
+
+The Supabase 17.11 deployment has V1 and V2 applied. It uses generated app-role,
+migration-role and JWT credentials in the ignored local `backend/.env`, with
+demo seeding disabled. No API keys or provisioning password are saved there.
+Do not copy that file into a PR or container image. PostgreSQL 16 integration
+execution remains pending a Docker-enabled environment; a successful live 17
+check does not replace that release check.
 
 To deploy, the operator still supplies the target host/database, provisioning
 access, role passwords, JWT signing key, allowed frontend origin, and the AWS
