@@ -115,6 +115,19 @@ mvn -f "backend/pom.xml" test
 Java 17 and Maven 3.9.9 can also be installed system-wide. Portable `tools/` files
 are ignored and are not included in the branch.
 
+If Java reports `Unable to establish loopback connection` from `PipeImpl` on
+Windows, this machine's shortened temp path is incompatible with Java's native
+socket handling. The verified workaround is session-local: use a normal absolute
+temp directory before starting Maven/Java (IPv4 flags alone did not fix it):
+
+```powershell
+New-Item -ItemType Directory -Force -Path ".\tools\tmp" | Out-Null
+$env:TEMP = (Resolve-Path -LiteralPath ".\tools\tmp").Path
+$env:TMP = $env:TEMP
+```
+
+No server protocol, application code, or machine-wide network setting needs to change.
+
 ### H2 demo
 
 In a fresh shell with no PostgreSQL variables:
@@ -295,17 +308,30 @@ After loading your private environment file as described above:
 
 ```powershell
 $env:RUN_EXTERNAL_DB_TESTS = "true"
-mvn -f "backend/pom.xml" "-Dtest=ExternalPostgresSmokeTest" test
+mvn -f "backend/pom.xml" "-Dtest=External*Test" test
 Remove-Item -LiteralPath "Env:\RUN_EXTERNAL_DB_TESTS"
 ```
 
-Run this only against an approved demo/test database. It validates all 10 tables
+Run this only against an approved demo/test database. The external suites validate all 10 tables
 and their 10 foreign keys, Hibernate startup, Flyway checksums, app-role CRUD,
 partial uniqueness, reporting year boundaries, append-only permissions, and
 denied table creation. Test records are transactional and rolled back, including
 audit inserts; identity sequence counters may advance. Startup still runs any
 pending Flyway migrations, so review them first. The test requires no secrets
 in source code and is skipped by the ordinary local test command.
+
+`ExternalSchemaContractTest` compares every mapped column's type, length,
+nullability and identity strategy, every relationship, unique mapping, V2 index,
+and V1 CHECK name with the live catalog. It verifies migration history and role
+privileges, and tests orphan rejection and migration-role DDL within rollbacks.
+`ExternalBackendApiTest` exercises JWT login, student services/controllers,
+validation, audit/history generation, institution/programme reads, errors and CORS.
+`ExternalHttpStartupTest` starts real Tomcat on an ephemeral port and makes HTTP
+requests through Spring Security to the actual backend. No server remains running
+after the test JVM exits. No institution/programme write API or student DELETE API
+exists; write/delete verification uses existing repositories rather than adding endpoints.
+
+See [DATABASE_VERIFICATION.md](DATABASE_VERIFICATION.md) for the complete executed report.
 
 The Supabase 17.11 deployment has V1 and V2 applied. It uses generated app-role,
 migration-role and JWT credentials in the ignored local `backend/.env`, with

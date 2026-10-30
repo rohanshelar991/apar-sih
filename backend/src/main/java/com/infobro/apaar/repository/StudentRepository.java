@@ -4,15 +4,20 @@ import com.infobro.apaar.entity.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.domain.Specification;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Locale;
 
 @Repository
-public interface StudentRepository extends JpaRepository<Student, Long> {
+public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpecificationExecutor<Student> {
 
     List<Student> findByApaarId(String apaarId);
 
@@ -30,36 +35,31 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Page<Student> findByInstitutionId(Long institutionId, Pageable pageable);
 
-    @Query("SELECT s FROM Student s WHERE " +
-           "(:institutionId IS NULL OR s.institution.id = :institutionId) AND " +
-           "(:programmeId IS NULL OR s.programme.id = :programmeId) AND " +
-           "(:category IS NULL OR s.category = :category) AND " +
-           "(:status IS NULL OR s.verificationStatus = :status) AND " +
-           "(:year IS NULL OR s.admissionYear = :year) AND " +
-           "(:search IS NULL OR LOWER(s.name) LIKE LOWER(CONCAT('%', :search, '%')) OR s.apaarId LIKE CONCAT('%', :search, '%'))")
-    Page<Student> findWithFilters(
-        @Param("institutionId") Long institutionId,
-        @Param("programmeId") Long programmeId,
-        @Param("category") String category,
-        @Param("status") String status,
-        @Param("year") Integer year,
-        @Param("search") String search,
-        Pageable pageable
-    );
+    default Page<Student> findWithFilters(Long institutionId, Long programmeId, String category,
+                                          String status, Integer year, String search, Pageable pageable) {
+        return findAll(filters(institutionId, programmeId, category, status, year, search), pageable);
+    }
 
-    @Query("SELECT s FROM Student s WHERE " +
-           "(:institutionId IS NULL OR s.institution.id = :institutionId) AND " +
-           "(:programmeId IS NULL OR s.programme.id = :programmeId) AND " +
-           "(:category IS NULL OR s.category = :category) AND " +
-           "(:status IS NULL OR s.verificationStatus = :status) AND " +
-           "(:year IS NULL OR s.admissionYear = :year)")
-    List<Student> findAllWithFilters(
-        @Param("institutionId") Long institutionId,
-        @Param("programmeId") Long programmeId,
-        @Param("category") String category,
-        @Param("status") String status,
-        @Param("year") Integer year
-    );
+    default List<Student> findAllWithFilters(Long institutionId, Long programmeId, String category,
+                                             String status, Integer year) {
+        return findAll(filters(institutionId, programmeId, category, status, year, null));
+    }
+
+    private static Specification<Student> filters(Long institutionId, Long programmeId, String category,
+                                                   String status, Integer year, String search) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (institutionId != null) predicates.add(cb.equal(root.get("institution").get("id"), institutionId));
+            if (programmeId != null) predicates.add(cb.equal(root.get("programme").get("id"), programmeId));
+            if (category != null) predicates.add(cb.equal(root.get("category"), category));
+            if (status != null) predicates.add(cb.equal(root.get("verificationStatus"), status));
+            if (year != null) predicates.add(cb.equal(root.get("admissionYear"), year));
+            if (search != null) predicates.add(cb.or(
+                cb.like(cb.lower(root.get("name")), "%" + search.toLowerCase(Locale.ROOT) + "%"),
+                cb.like(root.get("apaarId"), "%" + search + "%")));
+            return cb.and(predicates.toArray(Predicate[]::new));
+        };
+    }
 
     long countByInstitutionId(Long institutionId);
 
