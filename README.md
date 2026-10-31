@@ -23,7 +23,6 @@ and compatibility notes.
 
 [![SIH 2026](https://img.shields.io/badge/SIH-2026_PS_26263-orange.svg?style=for-the-badge&logo=target)](https://sih.gov.in)
 [![AICTE](https://img.shields.io/badge/AICTE-Regulation_Bureau-blue.svg?style=for-the-badge&logo=governance)](https://aicte-india.org)
-[![Team](https://img.shields.io/badge/Team-AuthenIQ-purple.svg?style=for-the-badge)](https://github.com/abhishekbagi262/APAAR-ID---AuthenIQ)
 [![Tests](https://img.shields.io/badge/Unit_Tests-12%2F12_Passing_(0.15s)-success.svg?style=for-the-badge&logo=junit5)](#8-automated-test-suite--quality-metrics)
 [![License](https://img.shields.io/badge/License-MIT-emerald.svg?style=for-the-badge)](LICENSE)
 
@@ -37,11 +36,9 @@ and compatibility notes.
 
 ## 📽️ Demonstration Video & Quick Links
 
-- 🎬 **Full Walkthrough Video**: [`APAAR_Connect_Demo_Video.mp4`](APAAR_Connect_Demo_Video.mp4) *(02:58 min, Full HD 1080p, human voice narration, natural real-time cursor movement)*
+
 - 🌐 **In-App Theater Player**: [http://localhost:5173/demo](http://localhost:5173/demo) *(Integrated interactive chapter player with one-click MP4 and thumbnail download)*
-- 🖼️ **Official YouTube Thumbnail**: [`APAAR_Connect_YouTube_Thumbnail.jpg`](APAAR_Connect_YouTube_Thumbnail.jpg) *(16:9 Widescreen, 695 KB)*
-- 💻 **GitHub Repository**: [https://github.com/abhishekbagi262/APAAR-ID---AuthenIQ](https://github.com/abhishekbagi262/APAAR-ID---AuthenIQ)
-- 📑 **Interactive API Docs (Swagger UI)**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+- 💻 **GitHub Repository**: [For repo link click here](https://github.com/rohanshelar991/apar-sih))
 
 ---
 
