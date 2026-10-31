@@ -64,3 +64,9 @@ does not regenerate a recording. A new recording is needed to refresh that media
 - Authenticated end-to-end persona, upload, correction, report, QR, and audit
   checks were not completed: automatic approval review blocked backend launches.
   These checks must be run against a disposable H2 demo, not by seeding production.
+
+Follow-up login restoration: the local H2 backend is now running. All three
+existing demo accounts pass login and authenticated-profile checks with their
+expected roles. The browser confirms all three persona cards are visible; they
+also remain visible while the backend starts. Other end-to-end workflows listed
+above have not been rechecked.
