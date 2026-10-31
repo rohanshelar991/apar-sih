@@ -76,7 +76,7 @@ chapters = [
 ]
 
 subtitles = [
-    (0.0, 7.5, "Welcome. Team AuthenIQ presents APAAR-Connect for Smart India Hackathon 2026, Problem Statement 26263."),
+    (0.0, 7.5, "Welcome. Team AuthenIQ presents APAAR GARUDA NETRA for Smart India Hackathon 2026, Problem Statement 26263."),
     (7.5, 14.5, "Our prototype uses a simulated APAAR verification adapter with synthetic data, as shown in the footer."),
     (14.5, 21.0, "The system provides role-based access for institutions, regulators, and verifiers."),
     (21.0, 27.74, "Let us log in as BMS College of Engineering (INST001)."),
@@ -91,7 +91,7 @@ subtitles = [
     (71.5, 78.5, "In seconds, the engine flags 15 anomalies across the batch, including in-file duplicates and invalid formats."),
     (78.5, 85.37, "Crucially, adding these 31 CSE records pushes enrolment to 261 students, triggering an INTAKE_EXCEEDED violation at 108.7% capacity."),
     
-    (85.37, 92.5, "Instead of rejecting entire batches, APAAR-Connect enables inline corrections."),
+    (85.37, 92.5, "Instead of rejecting entire batches, APAAR GARUDA NETRA enables inline corrections."),
     (92.5, 99.5, "For student Rahul Sharma, flagged with an invalid format, the admin clicks Edit Record."),
     (99.5, 106.0, "We enter the corrected 12-digit APAAR ID with live regex validation."),
     (106.0, 113.57, "Upon saving, the engine instantly re-evaluates and marks the record Valid. Every edit is logged in the audit trail."),
@@ -104,7 +104,7 @@ subtitles = [
     (145.49, 153.0, "Regulators can export full compliance reports in PDF and CSV with a single click."),
     (153.0, 160.5, "Finally, our verification flow allows students to generate time-limited, consent-backed QR tokens."),
     (160.5, 167.5, "Verifiers scan the token to verify permitted credentials without exposing Aadhaar or unconsented data."),
-    (167.5, 178.75, "Our complete prototype working is uploaded to GitHub, with the repository link attached for you to view. APAAR-Connect by Team AuthenIQ brings automated compliance and trust to higher education. Thank you.")
+    (167.5, 178.75, "Our complete prototype working is uploaded to GitHub, with the repository link attached for you to view. APAAR GARUDA NETRA by Team AuthenIQ brings automated compliance and trust to higher education. Thank you.")
 ]
 
 # State switch intervals: (start_t, end_t, state_key)
@@ -300,7 +300,7 @@ def overlay_cursor_alpha(frame, x, y, click_ring=0):
         frame[y1:y2, x1:x2] = blended.astype(np.uint8)
 
 def draw_hud(img, t):
-    curr_ch = "APAAR-CONNECT • SMART INDIA HACKATHON 2026"
+    curr_ch = "APAAR GARUDA NETRA • SMART INDIA HACKATHON 2026"
     sub_ch = "Team AuthenIQ • Problem Statement 26263"
     for start, end, ch_title, ch_sub in chapters:
         if start <= t < end:

@@ -7,7 +7,7 @@ import edge_tts
 VOICE = "en-IN-PrabhatNeural"
 
 scripts = {
-    "scene1": """Welcome. Team AuthenIQ presents APAAR-Connect for Smart India Hackathon 2026, Problem Statement 26263: AICTE Student Data Management and Verification.
+    "scene1": """Welcome. Team AuthenIQ presents APAAR GARUDA NETRA for Smart India Hackathon 2026, Problem Statement 26263: AICTE Student Data Management and Verification.
 Our prototype uses a simulated APAAR verification adapter with synthetic data.
 The system provides role-based access for institutions, regulators, and verifiers.
 Let us log in as BMS College of Engineering.""",
@@ -22,7 +22,7 @@ Submitting triggers our asynchronous 9-rule validation engine.
 In seconds, the engine flags 15 anomalies across the batch, including in-file duplicates and invalid formats.
 Crucially, adding these 31 CSE records pushes enrolment to 261 students, triggering an INTAKE_EXCEEDED violation at 108.7 percent capacity.""",
 
-    "scene4": """Instead of rejecting entire batches, APAAR-Connect enables inline corrections.
+    "scene4": """Instead of rejecting entire batches, APAAR GARUDA NETRA enables inline corrections.
 For student Rahul Sharma, flagged with an invalid format, the admin clicks Edit Record.
 We enter the corrected 12-digit APAAR ID with live regex validation.
 Upon saving, the engine instantly re-evaluates and marks the record Valid.
@@ -38,7 +38,7 @@ Regulators can review conflicting records and escalate for inquiry.""",
 Finally, our verification flow allows students to generate time-limited, consent-backed QR tokens.
 Verifiers scan the token to verify permitted credentials without exposing Aadhaar or unconsented data.
 Our complete prototype code and working implementation are uploaded to GitHub, with the repository link attached for you to view.
-APAAR-Connect by Team AuthenIQ brings automated compliance and trust to higher education.
+APAAR GARUDA NETRA by Team AuthenIQ brings automated compliance and trust to higher education.
 Thank you."""
 }
 

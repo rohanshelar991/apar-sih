@@ -476,7 +476,7 @@ public class DTOs {
         private String verificationStatus;
         private LocalDateTime verifiedAt;
         private List<String> permittedFields;
-        private String issuer = "AICTE APAAR-Connect Verification Gateway";
+        private String issuer = "AICTE APAAR GARUDA NETRA Verification Gateway";
 
         public boolean isValid() { return valid; }
         public void setValid(boolean valid) { this.valid = valid; }

@@ -135,7 +135,7 @@ draw.rounded_rectangle([60, 45, 60 + pill_w, 45 + pill_h], radius=18, fill=(242,
 draw.text((78, 52), "SMART INDIA HACKATHON 2026 • PS 26263", fill=(15, 23, 42), font=font_pill)
 
 # Giant Headline
-draw.text((60, 100), "APAAR-CONNECT", fill=(255, 255, 255), font=font_giant)
+draw.text((60, 100), "APAAR GARUDA NETRA", fill=(255, 255, 255), font=font_giant)
 # Cyan glow accent under title
 draw.text((62, 180), "AICTE STUDENT DATA PLATFORM", fill=(0, 210, 255), font=font_sub)
 

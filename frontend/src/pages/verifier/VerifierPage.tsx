@@ -26,7 +26,7 @@ export const VerifierPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-slate-50 via-emerald-50/20 to-blue-50/20">
+    <div className="min-h-screen flex flex-col justify-between bg-ivory">
       <header className="border-b border-slate-200/80 bg-white/80 backdrop-blur-md px-6 py-3 shadow-xs">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Logo size="md" />

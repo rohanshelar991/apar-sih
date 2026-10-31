@@ -56,205 +56,129 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
-      {/* Top Bar Banner */}
-      <header className="border-b border-slate-200/80 bg-white/80 backdrop-blur-md px-6 py-3 shadow-xs">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+    <div className="garuda-login min-h-screen flex flex-col">
+      <header className="border-b border-feather bg-white px-5 sm:px-8 lg:px-12 py-4">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <Logo size="md" />
-          <div className="flex items-center gap-3">
-            <Link
-              to="/demo"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-xs shadow-sm hover:opacity-90 transition-opacity"
-            >
-              <Play className="w-3.5 h-3.5 fill-current" />
+          <div className="flex flex-wrap items-center gap-3">
+            <Link to="/demo" className="inline-flex items-center gap-2 rounded-lg border border-feather px-3 py-2.5 text-xs font-semibold text-navy hover:bg-ivory transition-colors">
+              <Play className="w-3.5 h-3.5 text-gold-dark fill-current" />
               <span>Watch Video Demo (2:52 min)</span>
             </Link>
-            <span className="hidden sm:inline-block text-[11px] font-bold px-2.5 py-1 rounded-full bg-blue-100 text-navy border border-blue-200">
-              Smart India Hackathon 2026 &bull; PS 26263
+            <span className="text-[10px] leading-relaxed font-semibold tracking-wide text-slate-500 border-l border-feather pl-3">
+              Smart India Hackathon 2026<br /><span className="text-navy">PS 26263 · Smart Automation</span>
             </span>
           </div>
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          
-          {/* Left Column: Mission & Demo Accounts (7 cols) */}
+      <main className="flex-1 flex items-center px-4 sm:px-8 lg:px-12 py-7 lg:py-10">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-10 items-start">
           <div className="lg:col-span-7 space-y-6">
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100/80 text-primary font-semibold text-xs border border-blue-200 mb-3">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>AICTE Regulation Bureau &bull; Theme: Smart Automation</span>
+            <section className="garuda-hero relative overflow-hidden rounded-2xl px-6 py-7 sm:p-9 text-white">
+              <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D8BA7D] mb-5">
+                <span className="w-6 h-px bg-gold" />
+                AICTE Regulation Bureau · Academic Intelligence
               </div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-navy tracking-tight leading-tight">
-                APAAR ID-Based Student Data Management & Verification
+              <h1 className="relative max-w-xl text-[32px] sm:text-[40px] xl:text-[44px] leading-[1.15] font-semibold tracking-tight">
+                One identity.<br />Countless academic journeys.<br />
+                <span className="text-[#D8BA7D]">One trusted vision.</span>
               </h1>
-              <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                Centralized institutional registry with automated multi-tier anomaly detection, cross-institutional duplicate identification, live intake compliance tracking, and privacy-preserving QR verification.
+              <p className="relative mt-5 text-sm leading-relaxed text-[#D0D8E5] max-w-lg">
+                A unified platform for student data management, institutional verification,
+                academic integrity, and privacy-preserving identity validation.
               </p>
-            </div>
-
-            {/* One-Click Demo Login Cards */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Select a Demo Persona (One-Click Instant Login)
-                </p>
-                <span className="text-[11px] text-primary font-medium">Judges Quick Access</span>
+              <div className="mt-7 flex items-center gap-2 text-[11px] tracking-wide text-[#D8BA7D]">
+                <Shield className="w-3.5 h-3.5" />
+                A Vision for Academic Trust.
               </div>
+            </section>
 
+            <section aria-labelledby="demo-personas-heading">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                <h2 id="demo-personas-heading" className="text-[11px] font-bold uppercase tracking-[0.12em] text-navy">Explore a demo persona</h2>
+                <span className="text-[10px] text-slate-500">One-click instant login · Judges Quick Access</span>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {demoAccounts.map((account) => {
                   const isReg = account.role === 'ROLE_AICTE_REGULATOR';
                   const isInst = account.role === 'ROLE_INSTITUTION_ADMIN';
-
                   return (
-                    <button
-                      key={account.email}
-                      type="button"
-                      disabled={isSubmitting}
+                    <button key={account.email} type="button" disabled={isSubmitting}
                       onClick={() => handleDemoLogin(account.email, account.password)}
-                      className={`text-left p-3.5 rounded-xl border bg-white shadow-xs hover:shadow-md transition-all duration-150 flex flex-col justify-between group hover:-translate-y-0.5 ${
-                        isReg
-                          ? 'border-purple-200 hover:border-purple-500'
-                          : isInst
-                          ? 'border-blue-200 hover:border-primary'
-                          : 'border-emerald-200 hover:border-emerald-500'
-                      }`}
-                    >
+                      className="garuda-persona group rounded-xl p-4 text-left bg-white flex flex-col justify-between transition-colors disabled:opacity-50">
                       <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <div
-                            className={`p-1.5 rounded-lg ${
-                              isReg
-                                ? 'bg-purple-100 text-purple-700'
-                                : isInst
-                                ? 'bg-blue-100 text-primary'
-                                : 'bg-emerald-100 text-emerald-700'
-                            }`}
-                          >
-                            {isReg ? (
-                              <Shield className="w-4 h-4" />
-                            ) : isInst ? (
-                              <Building2 className="w-4 h-4" />
-                            ) : (
-                              <UserCheck className="w-4 h-4" />
-                            )}
-                          </div>
-                          <span className="text-[10px] font-bold text-slate-400 group-hover:text-primary transition-colors flex items-center gap-0.5">
-                            Demo <ArrowRight className="w-3 h-3 inline" />
+                        <div className="flex items-center justify-between mb-3">
+                          <span className={`p-2 rounded-lg ${isReg ? 'bg-gold-light text-gold-dark' : isInst ? 'bg-primary-50 text-primary' : 'bg-success-light text-success'}`}>
+                            {isReg ? <Shield className="w-4 h-4" /> : isInst ? <Building2 className="w-4 h-4" /> : <UserCheck className="w-4 h-4" />}
                           </span>
+                          <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-primary" />
                         </div>
-                        <h4 className="font-bold text-xs text-slate-900 group-hover:text-primary transition-colors">
-                          {account.title}
-                        </h4>
-                        <p className="text-[11px] text-slate-500 font-medium truncate mt-0.5">
-                          {account.institution}
-                        </p>
+                        <h3 className="font-semibold text-xs leading-relaxed text-navy">{account.title}</h3>
+                        <p className="text-[10px] text-slate-500 leading-relaxed mt-1">{account.institution}</p>
                       </div>
-
-                      <div className="mt-3 pt-2 border-t border-slate-100 text-[10px] text-slate-400 font-mono">
-                        {account.email}
-                      </div>
+                      <div className="mt-3 pt-3 border-t border-feather text-[9px] text-slate-500 break-all">{account.email}</div>
                     </button>
                   );
                 })}
               </div>
-            </div>
+            </section>
 
-            {/* Key Capabilities Pills */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
-              <div className="p-2 rounded-lg bg-white border border-slate-200/80 shadow-2xs">
-                <span className="block text-[10px] text-slate-400 font-medium">Validation</span>
-                <span className="font-bold text-xs text-slate-800">9 Core Rules</span>
-              </div>
-              <div className="p-2 rounded-lg bg-white border border-slate-200/80 shadow-2xs">
-                <span className="block text-[10px] text-slate-400 font-medium">Intake Engine</span>
-                <span className="font-bold text-xs text-slate-800">OK / Warn / Exceed</span>
-              </div>
-              <div className="p-2 rounded-lg bg-white border border-slate-200/80 shadow-2xs">
-                <span className="block text-[10px] text-slate-400 font-medium">Privacy</span>
-                <span className="font-bold text-xs text-slate-800">Token & QR Masking</span>
-              </div>
-              <div className="p-2 rounded-lg bg-white border border-slate-200/80 shadow-2xs">
-                <span className="block text-[10px] text-slate-400 font-medium">Compliance</span>
-                <span className="font-bold text-xs text-slate-800">Full Audit Trail</span>
-              </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 border-t border-feather pt-4">
+              <div><span className="block text-[10px] text-slate-500 mb-1">Validation</span><span className="font-semibold text-[11px] text-navy">9 Core Rules</span></div>
+              <div><span className="block text-[10px] text-slate-500 mb-1">Intake Engine</span><span className="font-semibold text-[11px] text-navy">OK / Warn / Exceed</span></div>
+              <div><span className="block text-[10px] text-slate-500 mb-1">Privacy</span><span className="font-semibold text-[11px] text-navy">Token &amp; QR Masking</span></div>
+              <div><span className="block text-[10px] text-slate-500 mb-1">Compliance</span><span className="font-semibold text-[11px] text-navy">Full Audit Trail</span></div>
             </div>
           </div>
 
-          {/* Right Column: Login Card (5 cols) */}
-          <div className="lg:col-span-5">
-            <div className="bg-white rounded-2xl shadow-xl border border-slate-200/90 p-6 sm:p-8">
-              <div className="mb-6">
-                <h3 className="text-xl font-bold text-navy">Sign In to APAAR-Connect</h3>
-                <p className="text-xs text-slate-500 mt-1">
-                  Access institutional data or regulatory bureau dashboard
-                </p>
+          <div className="lg:col-span-5 lg:pt-5">
+            <div className="garuda-signin bg-white rounded-2xl border border-feather p-6 sm:p-8 xl:p-10">
+              <div className="flex items-center gap-2 text-[10px] font-bold tracking-[0.18em] uppercase text-gold-dark mb-6">
+                <span className="w-5 h-px bg-gold" /> Welcome back
               </div>
-
+              <div className="mb-7">
+                <h2 className="text-[24px] leading-tight font-semibold text-navy">Sign in to<br />APAAR GARUDA NETRA</h2>
+                <p className="text-xs leading-relaxed text-slate-500 mt-3">Access institutional data or your regulatory bureau dashboard.</p>
+              </div>
               {error && (
-                <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                  <span>{error}</span>
+                <div role="alert" className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" /><span>{error}</span>
                 </div>
               )}
-
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Official Email Address
-                  </label>
+                  <label htmlFor="signin-email" className="block text-xs font-semibold text-navy mb-2">Official Email Address</label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="admin@bmsce.ac.in"
-                      className="w-full text-xs rounded-xl border border-slate-200 pl-9 pr-3 py-2.5 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    />
+                    <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                    <input id="signin-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)}
+                      placeholder="admin@bmsce.ac.in" className="w-full text-sm rounded-lg border border-feather bg-white pl-10 pr-3 py-3 text-navy placeholder:text-slate-400 focus:ring-2 focus:ring-primary/15 focus:border-primary" />
                   </div>
                 </div>
-
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Password
-                  </label>
+                  <label htmlFor="signin-password" className="block text-xs font-semibold text-navy mb-2">Password</label>
                   <div className="relative">
-                    <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••••••"
-                      className="w-full text-xs rounded-xl border border-slate-200 pl-9 pr-3 py-2.5 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    />
+                    <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                    <input id="signin-password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••••••" className="w-full text-sm rounded-lg border border-feather bg-white pl-10 pr-3 py-3 text-navy placeholder:text-slate-400 focus:ring-2 focus:ring-primary/15 focus:border-primary" />
                   </div>
                 </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-primary to-navy hover:from-primary-600 hover:to-navy-light text-white font-semibold text-xs shadow-md transition-all duration-150 flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  {isSubmitting ? 'Authenticating...' : 'Sign In with Credentials'}
+                <button type="submit" disabled={isSubmitting}
+                  className="w-full py-3.5 px-4 rounded-lg bg-primary hover:bg-primary-600 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
+                  {isSubmitting ? 'Authenticating...' : 'Sign In with Credentials'}<ArrowRight className="w-4 h-4" />
                 </button>
               </form>
-
-              <div className="mt-5 pt-4 border-t border-slate-100 text-center">
-                <span className="text-[11px] text-slate-500">
-                  Default Demo Password: <span className="font-mono font-semibold text-slate-700">Admin@123</span> / <span className="font-mono font-semibold text-slate-700">Regulator@123</span>
-                </span>
+              <div className="mt-6 pt-5 border-t border-feather">
+                <div className="flex items-center gap-2 text-[10px] text-slate-500"><Lock className="w-3 h-3" />Institutional access · Role-based workspace</div>
+                <p className="mt-4 text-[10px] leading-relaxed text-slate-500">Default Demo Password:<br />
+                  <span className="font-mono font-semibold text-navy">Admin@123</span> / <span className="font-mono font-semibold text-navy">Regulator@123</span>
+                </p>
               </div>
             </div>
+            <p className="text-center text-[10px] text-slate-500 mt-5">APAAR GARUDA NETRA · A Vision for Academic Trust.</p>
           </div>
-
         </div>
       </main>
-
-      {/* Global Prototype Footer */}
       <Footer />
     </div>
   );

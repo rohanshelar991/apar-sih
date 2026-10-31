@@ -38,10 +38,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const isVerifier = user?.role === 'ROLE_AUTHORIZED_VERIFIER';
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+    `flex items-center gap-3 min-h-11 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
       isActive
-        ? 'bg-primary text-white shadow-sm font-semibold'
-        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
+        ? 'bg-white/10 text-white border-l-2 border-gold font-semibold'
+        : 'text-[#C4CDDC] hover:text-white hover:bg-white/5'
     }`;
 
   return (
@@ -55,13 +55,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       )}
 
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 flex w-64 flex-col garuda-sidebar border-r border-navy bg-navy transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } no-print`}
       >
         {/* Logo header */}
-        <div className="flex h-16 items-center px-6 border-b border-slate-100">
-          <Logo size="sm" />
+        <div className="flex h-24 items-center px-5 border-b border-white/10">
+          <Logo size="sm" showSubtitle={false} />
         </div>
 
         {/* Navigation list */}
@@ -69,7 +69,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {/* Institution Menu */}
           {(isInstAdmin || isRegulator) && (
             <div>
-              <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9]">
                 Institution Portal
               </div>
               <div className="space-y-1">
@@ -109,7 +109,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {/* AICTE Regulator Menu */}
           {isRegulator && (
             <div>
-              <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
+              <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9] flex items-center justify-between">
                 <span>AICTE Regulation</span>
                 <span className="text-[9px] bg-purple-100 text-purple-700 px-1 py-0.2 rounded font-semibold">Bureau</span>
               </div>
@@ -149,7 +149,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
           {/* Verifier Menu */}
           <div>
-            <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9]">
               Public / Verifier Flow
             </div>
             <div className="space-y-1">
@@ -159,7 +159,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               </NavLink>
 
               <NavLink to="/help" className={linkClass} onClick={onClose}>
-                <HelpCircle className="w-4 h-4 flex-shrink-0 text-slate-400" />
+                <HelpCircle className="w-4 h-4 flex-shrink-0 text-[#AAB6C9]" />
                 <span>Guide & Demo Walkthrough</span>
               </NavLink>
             </div>
@@ -167,22 +167,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* User Card in Footer */}
-        <div className="p-4 border-t border-slate-100 bg-slate-50/50">
+        <div className="p-4 border-t border-white/10 bg-white/5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 overflow-hidden">
-              <div className="w-8 h-8 rounded-full bg-navy text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
                 {user?.fullName?.charAt(0) || 'U'}
               </div>
               <div className="truncate">
-                <p className="text-xs font-semibold text-slate-800 truncate">{user?.fullName}</p>
-                <p className="text-[10px] text-slate-400 truncate">{user?.email}</p>
+                <p className="text-xs font-semibold text-white truncate">{user?.fullName}</p>
+                <p className="text-[10px] text-[#AAB6C9] truncate">{user?.email}</p>
               </div>
             </div>
 
             <button
               onClick={handleLogout}
               title="Logout"
-              className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              className="p-1.5 text-[#AAB6C9] hover:text-red-600 hover:bg-white/10 rounded-lg transition-colors"
             >
               <LogOut className="w-4 h-4" />
             </button>

@@ -45,7 +45,7 @@ export const VerifyDetail: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-br from-slate-50 via-emerald-50/20 to-blue-50/20">
+    <div className="min-h-screen flex flex-col justify-between bg-ivory">
       <header className="border-b border-slate-200/80 bg-white/80 backdrop-blur-md px-6 py-3 shadow-xs">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Logo size="md" />
@@ -79,7 +79,7 @@ export const VerifyDetail: React.FC = () => {
                   Authentic Student Credential
                 </h2>
                 <p className="text-xs text-emerald-100 font-medium">
-                  Verified by {result.issuer || 'AICTE APAAR-Connect Verification Gateway'}
+                  Verified by {result.issuer || 'AICTE APAAR GARUDA NETRA Verification Gateway'}
                 </p>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/20 text-white text-[11px] font-mono mt-1">
                   <Clock className="w-3 h-3 text-emerald-300" />

@@ -1,4 +1,4 @@
-# APAAR-Connect: Official Video Explanation Script & Recording Guide
+# APAAR GARUDA NETRA: Official Video Explanation Script & Recording Guide
 **Smart India Hackathon 2026 | Problem Statement 26263**  
 *AICTE Regulation Bureau | Theme: Smart Automation | Category: Software | Team: INFOBRO*
 
@@ -38,11 +38,11 @@
 - Hover mouse over the 3 one-click Demo Persona cards.
 
 #### Voiceover Script:
-> *"Respected judges and evaluators, welcome to our demonstration of **APAAR-Connect**, developed by Team INFOBRO for Smart India Hackathon 2026, Problem Statement 26263 by the AICTE Regulation Bureau.*  
+> *"Respected judges and evaluators, welcome to our demonstration of **APAAR GARUDA NETRA**, developed by Team INFOBRO for Smart India Hackathon 2026, Problem Statement 26263 by the AICTE Regulation Bureau.*\
 >  
 > *Every year, over 10,000 AICTE-approved institutions admit millions of technical students. However, regulators face a critical blind spot: unverified student admissions, unauthorized intake exceedance breaches, cross-institutional duplicate enrolments, and privacy violations during manual credential verification.*  
 >  
-> *APAAR-Connect solves this with an automated, 12-digit APAAR ID-based institutional registry featuring live anomaly intelligence, intake monitoring, and privacy-preserving QR verification. Let’s see it live."*
+> *APAAR GARUDA NETRA solves this with an automated, 12-digit APAAR ID-based institutional registry featuring live anomaly intelligence, intake monitoring, and privacy-preserving QR verification. Let’s see it live."*
 
 ---
 
@@ -155,11 +155,11 @@
 - Return to the login hero screen.
 
 #### Voiceover Script:
-> *"Under the hood, APAAR-Connect is built with a production-grade tech stack: Spring Boot 3 and Java on the backend, React 18, TypeScript, and Tailwind on the frontend, with zero-setup H2 in PostgreSQL mode, and full Docker containerization.*  
+> *"Under the hood, APAAR GARUDA NETRA is built with a production-grade tech stack: Spring Boot 3 and Java on the backend, React 18, TypeScript, and Tailwind on the frontend, with zero-setup H2 in PostgreSQL mode, and full Docker containerization.*\
 >  
 > *Our interface-based adapter architecture ensures seamless plug-and-play integration with production DigiLocker and Academic Bank of Credits gateways in the future.*  
 >  
-> *APAAR-Connect brings transparency, automation, and data integrity to technical education in India. Thank you!"*
+> *APAAR GARUDA NETRA brings transparency, automation, and data integrity to technical education in India. Thank you!"*
 
 ---
 

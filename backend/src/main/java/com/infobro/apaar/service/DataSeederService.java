@@ -53,7 +53,7 @@ public class DataSeederService implements CommandLineRunner {
             return;
         }
 
-        log.info("Starting synthetic database seeding for SIH 2026 APAAR-Connect prototype...");
+        log.info("Starting synthetic database seeding for SIH 2026 APAAR GARUDA NETRA prototype...");
 
         // 1. Seed 10 Institutions
         List<Institution> institutions = new ArrayList<>();

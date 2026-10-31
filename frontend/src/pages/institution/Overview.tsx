@@ -54,10 +54,10 @@ export const InstitutionOverview: React.FC = () => {
   };
 
   const chartData = [
-    { name: 'Valid', count: stats?.validStudents || 0, color: '#2E9E5B' },
-    { name: 'Pending', count: stats?.pendingStudents || 0, color: '#F2A100' },
-    { name: 'Duplicate', count: stats?.duplicateStudents || 0, color: '#7F5FA8' },
-    { name: 'Errors', count: stats?.errorStudents || 0, color: '#D64545' },
+    { name: 'Valid', count: stats?.validStudents || 0, color: '#23865B' },
+    { name: 'Pending', count: stats?.pendingStudents || 0, color: '#D99A32' },
+    { name: 'Duplicate', count: stats?.duplicateStudents || 0, color: '#718096' },
+    { name: 'Errors', count: stats?.errorStudents || 0, color: '#C64C4C' },
   ];
 
   return (

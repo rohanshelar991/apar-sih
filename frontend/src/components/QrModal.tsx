@@ -203,7 +203,7 @@ export const QrModal: React.FC<QrModalProps> = ({ student, onClose }) => {
                     </div>
                     <div>
                       <p className="text-[10px] font-extrabold uppercase tracking-wider text-navy">
-                        AICTE APAAR-Connect
+                        AICTE APAAR GARUDA NETRA
                       </p>
                       <p className="text-[9px] text-slate-500">Student Verified Record</p>
                     </div>

@@ -176,7 +176,7 @@ export const DemoPlayer: React.FC = () => {
               </span>
             </div>
             <h1 className="text-2xl font-bold text-white tracking-tight">
-              APAAR-Connect End-to-End System Demonstration
+              APAAR GARUDA NETRA End-to-End System Demonstration
             </h1>
           </div>
 

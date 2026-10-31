@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "=============================================================================="
-echo "       AICTE APAAR-Connect: Student Data Management Platform"
+echo "       AICTE APAAR GARUDA NETRA: Student Data Management Platform"
 echo "             Smart India Hackathon 2026 - Problem Statement 26263"
 echo "                        Developed by Team INFOBRO"
 echo "=============================================================================="

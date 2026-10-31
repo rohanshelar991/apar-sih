@@ -49,7 +49,7 @@ export const RegulatorDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   // Category chart colors
-  const CATEGORY_COLORS = ['#0070C0', '#2E9E5B', '#F2A100', '#7F5FA8', '#E65100'];
+  const CATEGORY_COLORS = ['#244B83', '#23865B', '#D99A32', '#718096', '#E65100'];
 
   useEffect(() => {
     institutionApi.getAll().then(setInstitutions).catch(console.error);
@@ -255,9 +255,9 @@ export const RegulatorDashboard: React.FC = () => {
                   contentStyle={{ borderRadius: '12px', fontSize: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}
                 />
                 <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-                <Bar dataKey="Approved" fill="#1F497D" radius={[4, 4, 0, 0]} name="Approved Intake" />
-                <Bar dataKey="Supernumerary" fill="#7F5FA8" radius={[4, 4, 0, 0]} name="Supernumerary Quota" />
-                <Bar dataKey="ActualEnrolment" fill="#0070C0" radius={[4, 4, 0, 0]} name="Actual Enrolment (APAAR)" />
+                <Bar dataKey="Approved" fill="#101D35" radius={[4, 4, 0, 0]} name="Approved Intake" />
+                <Bar dataKey="Supernumerary" fill="#718096" radius={[4, 4, 0, 0]} name="Supernumerary Quota" />
+                <Bar dataKey="ActualEnrolment" fill="#244B83" radius={[4, 4, 0, 0]} name="Actual Enrolment (APAAR)" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -341,9 +341,9 @@ export const RegulatorDashboard: React.FC = () => {
                   <Line
                     type="monotone"
                     dataKey="count"
-                    stroke="#0070C0"
+                    stroke="#244B83"
                     strokeWidth={3}
-                    dot={{ r: 4, fill: '#1F497D' }}
+                    dot={{ r: 4, fill: '#101D35' }}
                     name="Total Enrolments"
                   />
                 </LineChart>

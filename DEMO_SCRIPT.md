@@ -1,4 +1,4 @@
-# APAAR-Connect: 3-Minute Hackathon Demo Script
+# APAAR GARUDA NETRA: 3-Minute Hackathon Demo Script
 **Smart India Hackathon 2026 | Problem Statement 26263**
 *AICTE Regulation Bureau | Theme: Smart Automation | Category: Software | Team: INFOBRO*
 

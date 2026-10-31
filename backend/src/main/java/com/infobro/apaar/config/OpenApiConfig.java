@@ -17,7 +17,7 @@ public class OpenApiConfig {
         final String securitySchemeName = "bearerAuth";
         return new OpenAPI()
                 .info(new Info()
-                        .title("APAAR-Connect Platform API")
+                        .title("APAAR GARUDA NETRA Platform API")
                         .description("AICTE APAAR ID-Based Student Data Management and Verification Platform - Smart India Hackathon 2026 (Problem Statement 26263)\n\n" +
                                 "*Disclaimer: Prototype – uses simulated APAAR verification adapter with synthetic records.*")
                         .version("1.0.0")

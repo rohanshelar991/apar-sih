@@ -7,33 +7,23 @@ interface LogoProps {
 }
 
 export const Logo: React.FC<LogoProps> = ({ className = '', size = 'md', showSubtitle = true }) => {
-  const iconSize = size === 'sm' ? 'w-7 h-7' : size === 'lg' ? 'w-12 h-12' : 'w-9 h-9';
-  const titleSize = size === 'sm' ? 'text-lg' : size === 'lg' ? 'text-2xl' : 'text-xl';
+  const iconSize = size === 'sm' ? 'w-9 h-9' : size === 'lg' ? 'w-14 h-14' : 'w-11 h-11';
+  const titleSize = size === 'sm' ? 'text-[13px]' : size === 'lg' ? 'text-xl' : 'text-[17px]';
 
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      {/* Shield & ID-card SVG icon */}
-      <div className={`relative flex items-center justify-center rounded-xl bg-gradient-to-br from-primary to-navy text-white shadow-md ${iconSize} p-1.5 flex-shrink-0`}>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          <rect x="7" y="8" width="10" height="7" rx="1.5" strokeWidth="1.5" />
-          <circle cx="10" cy="11.5" r="1" fill="currentColor" stroke="none" />
-          <line x1="13" y1="11" x2="15" y2="11" strokeWidth="1.5" />
-          <line x1="13" y1="13" x2="15" y2="13" strokeWidth="1.5" />
-        </svg>
-      </div>
-
-      <div className="leading-tight">
-        <div className={`font-extrabold tracking-tight text-navy ${titleSize} flex items-center gap-1.5`}>
-          <span>APAAR</span>
-          <span className="text-primary font-bold">Connect</span>
-          <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-100 text-primary font-semibold border border-blue-200">
-            AICTE
-          </span>
+    <div role="img" aria-label="APAAR GARUDA NETRA — AICTE Student Data Intelligence & Verification Platform" className={`garuda-logo flex items-center gap-3 min-w-0 ${className}`}>
+      <img src="/brand/garuda-mark.svg" alt="" aria-hidden="true" className={`${iconSize} flex-shrink-0`} />
+      <div className="min-w-0 leading-tight">
+        <div className="flex items-center gap-2 mb-0.5">
+          <span className="text-[9px] font-bold tracking-[0.25em] text-primary">APAAR</span>
+          <span className="text-[8px] font-semibold tracking-[0.1em] text-slate-500 border-l border-slate-300 pl-2">AICTE</span>
+        </div>
+        <div className={`garuda-wordmark font-extrabold tracking-[0.04em] text-navy whitespace-nowrap ${titleSize}`}>
+          GARUDA NETRA
         </div>
         {showSubtitle && (
-          <p className="text-[11px] text-slate-500 font-medium tracking-normal">
-            Institutions Data & Verification Platform
+          <p className="mt-1 text-[10px] text-slate-500 font-medium max-w-[19rem] leading-relaxed">
+            AICTE Student Data Intelligence &amp; Verification Platform
           </p>
         )}
       </div>

@@ -110,7 +110,7 @@ public class VerificationService {
 
         Student student = token.getStudent();
         dto.setValid(true);
-        dto.setIssuer("AICTE APAAR-Connect Verification Gateway");
+        dto.setIssuer("AICTE APAAR GARUDA NETRA Verification Gateway");
 
         // Parse allowed fields to strictly filter data minimization
         Set<String> allowed = new HashSet<>();

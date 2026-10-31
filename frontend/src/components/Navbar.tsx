@@ -79,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         {/* Watch Demo Video Link */}
         <Link
           to="/demo"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-xs shadow-xs hover:opacity-90 transition-opacity"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gold-light text-gold-dark border border-[#E8D8B7] font-bold text-xs shadow-xs hover:opacity-90 transition-opacity"
         >
           <Play className="w-3.5 h-3.5 fill-current" />
           <span className="hidden sm:inline">Watch Demo Video</span>

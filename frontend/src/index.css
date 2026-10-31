@@ -4,8 +4,38 @@
 
 @layer base {
   body {
-    @apply bg-slate-50 text-slate-800 font-sans antialiased;
+    @apply bg-ivory text-slate-800 font-sans antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
+  h1, h2, h3 { letter-spacing: -0.025em; }
+  button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+  :focus-visible { outline: 3px solid #C49A45; outline-offset: 3px; }
+  input:not([type='checkbox']):not([type='radio']), select, textarea { min-height: 2.75rem; }
+  input[type='checkbox'], input[type='radio'] { accent-color: #244B83; }
+  th { font-weight: 600; letter-spacing: 0.04em; }
+  tbody tr { transition: background-color 120ms ease; }
+  tbody tr:hover { background-color: #F8F6F0; }
+  ::selection { background: #EED9A3; color: #101D35; }
+}
+
+@layer components {
+  .garuda-login { background: #F8F6F0; }
+  .garuda-hero { background: #101D35; isolation: isolate; }
+  .garuda-hero::before {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: url('/brand/garuda-wing.svg') right bottom / 85% auto no-repeat;
+    opacity: .65; pointer-events: none;
+  }
+  .garuda-persona { border: 1px solid #E8E9EC; box-shadow: 0 3px 14px -8px #101D3520; }
+  .garuda-persona:hover { border-color: #C49A45; box-shadow: 0 8px 22px -12px #101D3533; }
+  .garuda-signin { box-shadow: 0 20px 60px -30px #101D3538; }
+  .garuda-sidebar { background: #101D35; color: #fff; }
+  .garuda-sidebar .garuda-wordmark { color: #fff; }
+  .garuda-sidebar .garuda-logo > div > div:first-child > span { color: #D8BA7D; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
 
 /* Custom polished scrollbar */

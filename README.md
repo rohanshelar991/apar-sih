@@ -1,4 +1,12 @@
-# 🎓 APAAR-Connect
+# APAAR GARUDA NETRA
+
+**AICTE Student Data Intelligence & Verification Platform**
+
+*A Vision for Academic Trust.*
+
+See [Brand identity and refresh validation](docs/BRANDING.md) for the visual system
+and compatibility notes.
+
 ### AICTE Student Data Management & Verification Platform
 **Smart India Hackathon 2026 | Problem Statement 26263**  
 *Organization: All India Council for Technical Education (AICTE), Regulation Bureau*  
@@ -40,8 +48,8 @@ AICTE oversees thousands of approved technical and management institutions acros
 4. **Credential Fraud**: Unverifiable student credentials leading to forged degrees and employer verification delays.
 5. **Privacy Breaches**: Exposure of sensitive personal identifiers (Aadhaar, contact details) during routine verification checks.
 
-### The APAAR-Connect Solution
-**Team AuthenIQ** built **APAAR-Connect**—a centralized, privacy-preserving regulatory and verification platform:
+### The APAAR GARUDA NETRA Solution
+**Team AuthenIQ** built **APAAR GARUDA NETRA**—a centralized, privacy-preserving regulatory and verification platform:
 - **Unified APAAR Identity**: Links every admission record to a 12-digit Automated Permanent Academic Account Registry (APAAR) ID.
 - **Asynchronous 9-Rule Validation Engine**: Instantly flags format errors, mandatory field omissions, in-file duplicates, cross-institutional concurrent enrolments, and intake capacity exceedances.
 - **Real-Time Regulatory Oversight**: Live AICTE dashboard tracking national intake utilization (OK &lt;90%, Warning 90–100%, Exceeded &gt;100%) with automated anomaly escalation.

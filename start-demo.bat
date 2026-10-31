@@ -1,15 +1,15 @@
 @echo off
 echo ==============================================================================
-echo        AICTE APAAR-Connect: Student Data Management Platform
+echo        AICTE APAAR GARUDA NETRA: Student Data Management Platform
 echo              Smart India Hackathon 2026 - Problem Statement 26263
 echo                         Developed by Team INFOBRO
 echo ==============================================================================
 echo.
 echo Starting Backend (Spring Boot 3 + In-Memory H2 in PostgreSQL Mode)...
-start "APAAR-Connect Backend (Port 8080)" cmd /k "tools\maven\bin\mvn.cmd -f backend\pom.xml spring-boot:run"
+start "APAAR GARUDA NETRA Backend (Port 8080)" cmd /k "tools\maven\bin\mvn.cmd -f backend\pom.xml spring-boot:run"
 
 echo Starting Frontend (React 18 + Vite on Port 5173)...
-start "APAAR-Connect Frontend (Port 5173)" cmd /k "npm run dev --prefix frontend"
+start "APAAR GARUDA NETRA Frontend (Port 5173)" cmd /k "npm run dev --prefix frontend"
 
 echo.
 echo ==============================================================================
