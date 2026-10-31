@@ -32,23 +32,26 @@ public class ValidationService {
     private final StudentHistoryRepository studentHistoryRepository;
     private final ValidationEngine validationEngine;
     private final AuditService auditService;
+    private final InstitutionAccessService access;
 
     public ValidationService(ValidationIssueRepository validationIssueRepository,
                              StudentRepository studentRepository,
                              ProgrammeRepository programmeRepository,
                              StudentHistoryRepository studentHistoryRepository,
                              ValidationEngine validationEngine,
-                             AuditService auditService) {
+                             AuditService auditService, InstitutionAccessService access) {
         this.validationIssueRepository = validationIssueRepository;
         this.studentRepository = studentRepository;
         this.programmeRepository = programmeRepository;
         this.studentHistoryRepository = studentHistoryRepository;
         this.validationEngine = validationEngine;
         this.auditService = auditService;
+        this.access = access;
     }
 
     public Page<DTOs.ValidationIssueDto> getIssues(Long institutionId, String status, String severity,
                                                    String ruleCode, int page, int size) {
+        institutionId = access.scopeInstitution(institutionId);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return validationIssueRepository.findWithFilters(institutionId, status, severity, ruleCode, pageable)
                 .map(this::toDto);
@@ -57,11 +60,13 @@ public class ValidationService {
     @Transactional
     public DTOs.ValidationIssueDto resolveIssue(Long issueId, DTOs.IssueResolveRequest request,
                                                String actor, String role, String ip) {
+        access.requireIssue(issueId);
         ValidationIssue issue = validationIssueRepository.findById(issueId)
                 .orElseThrow(() -> new NoSuchElementException("Issue not found with ID: " + issueId));
 
         Student student = issue.getStudent();
         if (student != null) {
+            if (request.getProgrammeId() != null) access.requireProgramme(request.getProgrammeId(), student.getInstitution().getId());
             // Apply requested updates
             if (request.getName() != null && !request.getName().trim().isEmpty()) {
                 recordHistory(student, "name", student.getName(), request.getName().trim(), actor);

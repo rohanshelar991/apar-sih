@@ -23,8 +23,9 @@ public interface ValidationIssueRepository extends JpaRepository<ValidationIssue
 
     long countByStatusAndStudentInstitutionId(String status, Long institutionId);
 
-    @Query("SELECT vi FROM ValidationIssue vi WHERE " +
-           "(:institutionId IS NULL OR (vi.student IS NOT NULL AND vi.student.institution.id = :institutionId) OR (vi.uploadBatch IS NOT NULL AND vi.uploadBatch.institution.id = :institutionId)) AND " +
+    @Query("SELECT vi FROM ValidationIssue vi LEFT JOIN vi.student s LEFT JOIN vi.uploadBatch b WHERE " +
+           "(:institutionId IS NULL OR ((s.institution.id = :institutionId OR b.institution.id = :institutionId) " +
+           "AND (s IS NULL OR s.institution.id = :institutionId) AND (b IS NULL OR b.institution.id = :institutionId))) AND " +
            "(:status IS NULL OR vi.status = :status) AND " +
            "(:severity IS NULL OR vi.severity = :severity) AND " +
            "(:ruleCode IS NULL OR vi.ruleCode = :ruleCode)")

@@ -4,6 +4,13 @@
 
 *A Vision for Academic Trust.*
 
+Cloud deployment preparation: [Vercel/Render guide](docs/DEPLOYMENT.md),
+[new Supabase Render variables](docs/RENDER_ENVIRONMENT.md),
+[verification status](docs/DEPLOYMENT_VERIFICATION.md), and
+[security review](docs/SECURITY_DEPLOYMENT_REVIEW.md).
+The approved new demo project is pinned; connection, migrations and deployment
+remain pending explicit authorization. Spring Boot JWT authentication is retained.
+
 See [Brand identity and refresh validation](docs/BRANDING.md) for the visual system
 and compatibility notes.
 

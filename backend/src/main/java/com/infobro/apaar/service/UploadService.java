@@ -36,6 +36,7 @@ public class UploadService {
     private final ValidationIssueRepository validationIssueRepository;
     private final ValidationEngine validationEngine;
     private final AuditService auditService;
+    private final InstitutionAccessService access;
 
     public UploadService(InstitutionRepository institutionRepository,
                          ProgrammeRepository programmeRepository,
@@ -43,7 +44,7 @@ public class UploadService {
                          UploadBatchRepository uploadBatchRepository,
                          ValidationIssueRepository validationIssueRepository,
                          ValidationEngine validationEngine,
-                         AuditService auditService) {
+                         AuditService auditService, InstitutionAccessService access) {
         this.institutionRepository = institutionRepository;
         this.programmeRepository = programmeRepository;
         this.studentRepository = studentRepository;
@@ -51,12 +52,17 @@ public class UploadService {
         this.validationIssueRepository = validationIssueRepository;
         this.validationEngine = validationEngine;
         this.auditService = auditService;
+        this.access = access;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public DTOs.UploadResultDto processCsvUpload(Long institutionId, MultipartFile file, String actor, String role, String ip) throws Exception {
+        institutionId = access.requireInstitution(institutionId);
+        if (file == null || file.isEmpty() || file.getOriginalFilename() == null
+            || !file.getOriginalFilename().toLowerCase(java.util.Locale.ROOT).endsWith(".csv"))
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "A non-empty CSV file is required.");
         Institution institution = institutionRepository.findById(institutionId)
-                .orElseThrow(() -> new NoSuchElementException("Institution not found with ID: " + institutionId));
+                .orElseThrow(() -> new NoSuchElementException("Institution not found."));
 
         List<Programme> programmes = programmeRepository.findByInstitutionId(institutionId);
         Map<String, Programme> programmeMap = new HashMap<>();
@@ -123,7 +129,7 @@ public class UploadService {
                         email,
                         phone,
                         "PENDING",
-                        true
+                        "true".equalsIgnoreCase(getRecordValue(record, "consent_given"))
                 );
 
                 ValidationResult valResult = validationEngine.validateStudent(student, batchApaars, true);
@@ -208,6 +214,7 @@ public class UploadService {
     }
 
     public Page<DTOs.UploadBatchDto> getBatchesByInstitution(Long institutionId, int page, int size) {
+        institutionId = access.requireInstitution(institutionId);
         return uploadBatchRepository.findByInstitutionIdOrderByUploadedAtDesc(institutionId, PageRequest.of(page, size))
                 .map(this::toBatchDto);
     }

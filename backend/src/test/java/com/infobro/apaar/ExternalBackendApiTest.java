@@ -40,6 +40,8 @@ class ExternalBackendApiTest {
     @Autowired JwtTokenProvider jwt;
     @Autowired StudentService studentService;
 
+    @org.junit.jupiter.api.AfterEach void clearSecurityContext() { org.springframework.security.core.context.SecurityContextHolder.clearContext(); }
+
     private Institution institution() {
         return institutions.saveAndFlush(new Institution("api-" + UUID.randomUUID().toString().substring(0, 20),
             "API test institution", "Test", "Test", "ACTIVE"));
@@ -94,6 +96,11 @@ class ExternalBackendApiTest {
 
     @Test void serviceValidationAndDuplicateRules() {
         Institution institution = institution();
+        String email=UUID.randomUUID()+"@example.invalid";
+        users.saveAndFlush(new UserAccount(email,encoder.encode(UUID.randomUUID().toString()),"Probe admin","ROLE_INSTITUTION_ADMIN",institution));
+        org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(
+            new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(email,null,
+                java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_INSTITUTION_ADMIN"))));
         Programme first = programmes.saveAndFlush(new Programme(institution, "CS", "CS", 2026, 100, 0));
         Programme second = programmes.saveAndFlush(new Programme(institution, "EC", "EC", 2026, 100, 0));
         var form = form(first);
@@ -111,14 +118,16 @@ class ExternalBackendApiTest {
 
     @Test void errorsAndConfiguredCors() throws Exception {
         mvc.perform(get("/api/students")).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.error").value("Unauthorized"));
-        String verifier = "Bearer " + jwt.generateToken("probe@example.invalid", "ROLE_AUTHORIZED_VERIFIER", null, "Probe");
+        users.saveAndFlush(new UserAccount("verifier-probe@example.invalid",encoder.encode(UUID.randomUUID().toString()),"Probe verifier","ROLE_AUTHORIZED_VERIFIER",null));
+        String verifier = "Bearer " + jwt.generateToken("verifier-probe@example.invalid", "ROLE_AUTHORIZED_VERIFIER", null, "Probe");
         mvc.perform(get("/api/students").header("Authorization", verifier)).andExpect(status().isForbidden());
         mvc.perform(options("/api/students").header("Origin", "http://localhost:5173")
             .header("Access-Control-Request-Method", "GET")).andExpect(status().isOk())
             .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"));
         mvc.perform(options("/api/students").header("Origin", "https://untrusted.invalid")
             .header("Access-Control-Request-Method", "GET")).andExpect(status().isForbidden());
-        String regulator = "Bearer " + jwt.generateToken("probe@example.invalid", "ROLE_AICTE_REGULATOR", null, "Probe");
+        users.saveAndFlush(new UserAccount("regulator-probe@example.invalid",encoder.encode(UUID.randomUUID().toString()),"Probe regulator","ROLE_AICTE_REGULATOR",null));
+        String regulator = "Bearer " + jwt.generateToken("regulator-probe@example.invalid", "ROLE_AICTE_REGULATOR", null, "Probe");
         mvc.perform(post("/api/students").header("Authorization", regulator).contentType("application/json").content("{"))
             .andExpect(status().isBadRequest());
         mvc.perform(get("/api/audit/logs").header("Authorization", regulator)).andExpect(status().isOk());

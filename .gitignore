@@ -17,6 +17,9 @@ test_*.mp4
 
 # Portable Maven Tooling (users run mvn or mvnw)
 tools/
+.vercel/
+.netlify/
+__pycache__/
 .mvn/wrapper/maven-wrapper.jar
 
 # Environment and Secrets

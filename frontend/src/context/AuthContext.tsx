@@ -17,9 +17,9 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Existing public demo personas remain visible while the backend is starting.
 // These shortcuts still use the normal authenticated login endpoint.
 const existingDemoAccounts: DemoAccount[] = [
-  { role: 'ROLE_INSTITUTION_ADMIN', title: 'Institution Administrator', institution: 'BMS College of Engineering (INST001)', email: 'admin@bmsce.ac.in', password: 'Admin@123', description: 'Uploads student batch CSVs, reviews validation errors, corrects flagged records, exports directories.' },
-  { role: 'ROLE_AICTE_REGULATOR', title: 'AICTE National Regulator', institution: 'AICTE Regulation Bureau', email: 'regulator@aicte-india.org', password: 'Regulator@123', description: 'Cross-institutional oversight, intake compliance charts, anomaly center, duplicate escalations, PDF reports.' },
-  { role: 'ROLE_AUTHORIZED_VERIFIER', title: 'Authorized Verifier / Employer', institution: 'Tata Consultancy Services (TCS)', email: 'verifier@tcs.com', password: 'Verifier@123', description: 'Verifies candidate authenticity via QR code or verification token with permitted fields data minimization.' },
+  { role: 'ROLE_INSTITUTION_ADMIN', title: 'DEMO Institution Administrator', institution: 'Demo Engineering Institute (DEMO001)', email: 'admin@example.com', password: '', description: 'Uploads student batch CSVs, reviews validation errors, corrects flagged records, exports directories.' },
+  { role: 'ROLE_AICTE_REGULATOR', title: 'DEMO National Regulator', institution: 'Isolated demo environment', email: 'regulator@example.com', password: '', description: 'Cross-institutional oversight, intake compliance charts, anomaly center, duplicate escalations, PDF reports.' },
+  { role: 'ROLE_AUTHORIZED_VERIFIER', title: 'DEMO Authorized Verifier', institution: 'Isolated demo environment', email: 'verifier@example.com', password: '', description: 'Verifies candidate authenticity via QR code or verification token with permitted fields data minimization.' },
 ];
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

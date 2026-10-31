@@ -29,6 +29,8 @@ public class StudentService {
     private final StudentHistoryRepository studentHistoryRepository;
     private final ValidationEngine validationEngine;
     private final AuditService auditService;
+    private final InstitutionAccessService access;
+    private final VerificationTokenRepository tokenRepository;
 
     public StudentService(StudentRepository studentRepository,
                           InstitutionRepository institutionRepository,
@@ -36,7 +38,7 @@ public class StudentService {
                           ValidationIssueRepository validationIssueRepository,
                           StudentHistoryRepository studentHistoryRepository,
                           ValidationEngine validationEngine,
-                          AuditService auditService) {
+                          AuditService auditService, InstitutionAccessService access, VerificationTokenRepository tokenRepository) {
         this.studentRepository = studentRepository;
         this.institutionRepository = institutionRepository;
         this.programmeRepository = programmeRepository;
@@ -44,12 +46,19 @@ public class StudentService {
         this.studentHistoryRepository = studentHistoryRepository;
         this.validationEngine = validationEngine;
         this.auditService = auditService;
+        this.access = access;
+        this.tokenRepository = tokenRepository;
     }
 
     public Page<DTOs.StudentDto> getStudents(Long institutionId, Long programmeId, String category,
                                              String status, Integer year, String search,
                                              int page, int size, String sortBy, String direction,
                                              boolean maskApaar) {
+        institutionId = access.scopeInstitution(institutionId);
+        if (programmeId != null) {
+            var programme = programmeRepository.findById(programmeId).orElseThrow();
+            access.requireProgramme(programmeId, institutionId != null ? institutionId : programme.getInstitution().getId());
+        }
         Sort sort = Sort.by("asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC,
                 sortBy != null ? sortBy : "id");
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -59,6 +68,7 @@ public class StudentService {
     }
 
     public DTOs.StudentDto getStudentById(Long id, boolean maskApaar) {
+        access.requireStudent(id);
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Student not found with ID: " + id));
         return toDto(student, maskApaar);
@@ -67,8 +77,11 @@ public class StudentService {
     @Transactional
     public DTOs.StudentDto createStudent(Long institutionId, DTOs.StudentFormRequest request,
                                          String actor, String role, String ip) {
+        institutionId = access.scopeInstitution(institutionId);
+        if (institutionId == null) institutionId = programmeRepository.findById(request.getProgrammeId()).orElseThrow().getInstitution().getId();
+        access.requireProgramme(request.getProgrammeId(), institutionId);
         Institution institution = institutionRepository.findById(institutionId)
-                .orElseThrow(() -> new NoSuchElementException("Institution not found with ID: " + institutionId));
+                .orElseThrow(() -> new NoSuchElementException("Institution not found."));
 
         Programme programme = programmeRepository.findById(request.getProgrammeId())
                 .orElseThrow(() -> new NoSuchElementException("Programme not found with ID: " + request.getProgrammeId()));
@@ -85,7 +98,7 @@ public class StudentService {
                 request.getEmail(),
                 request.getPhone(),
                 "PENDING",
-                request.getConsentGiven() != null ? request.getConsentGiven() : true
+                Boolean.TRUE.equals(request.getConsentGiven())
         );
 
         ValidationResult valResult = validationEngine.validateStudent(student, new HashSet<>(), false);
@@ -125,13 +138,26 @@ public class StudentService {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new NoSuchElementException("Student not found with ID: " + studentId));
 
+        access.requireStudent(studentId);
+        if (request.getProgrammeId() != null) access.requireProgramme(request.getProgrammeId(), student.getInstitution().getId());
+        if (request.getConsentGiven() != null) {
+            recordHistoryIfChanged(student, "consentGiven", String.valueOf(student.getConsentGiven()), String.valueOf(request.getConsentGiven()), actor);
+            student.setConsentGiven(request.getConsentGiven());
+            if (!request.getConsentGiven()) {
+                for (var token : tokenRepository.findByStudentIdOrderByCreatedAtDesc(studentId)) {
+                    token.setActive(false);
+                    tokenRepository.save(token);
+                }
+            }
+        }
+
         // Track history
-        recordHistoryIfChanged(student, "name", student.getName(), request.getName(), actor);
-        recordHistoryIfChanged(student, "apaarId", student.getApaarId(), validationEngine.normalizeApaarId(request.getApaarId()), actor);
-        recordHistoryIfChanged(student, "dob", student.getDob() != null ? student.getDob().toString() : null,
+        if (request.getName() != null) recordHistoryIfChanged(student, "name", student.getName(), request.getName(), actor);
+        if (request.getApaarId() != null) recordHistoryIfChanged(student, "apaarId", student.getApaarId(), validationEngine.normalizeApaarId(request.getApaarId()), actor);
+        if (request.getDob() != null) recordHistoryIfChanged(student, "dob", student.getDob() != null ? student.getDob().toString() : null,
                 request.getDob() != null ? request.getDob().toString() : null, actor);
-        recordHistoryIfChanged(student, "category", student.getCategory(), request.getCategory(), actor);
-        recordHistoryIfChanged(student, "admissionYear", String.valueOf(student.getAdmissionYear()),
+        if (request.getCategory() != null) recordHistoryIfChanged(student, "category", student.getCategory(), request.getCategory(), actor);
+        if (request.getAdmissionYear() != null) recordHistoryIfChanged(student, "admissionYear", String.valueOf(student.getAdmissionYear()),
                 String.valueOf(request.getAdmissionYear()), actor);
 
         if (request.getName() != null) student.setName(request.getName().trim());
@@ -208,6 +234,11 @@ public class StudentService {
     }
 
     public String exportStudentsCsv(Long institutionId, Long programmeId, String category, String status, Integer year) {
+        institutionId = access.scopeInstitution(institutionId);
+        if (programmeId != null) {
+            var programme = programmeRepository.findById(programmeId).orElseThrow();
+            access.requireProgramme(programmeId, institutionId != null ? institutionId : programme.getInstitution().getId());
+        }
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         pw.println("Student ID,APAAR ID,Name,DOB,Gender,Programme,Institution,Admission Year,Category,Email,Phone,Status");

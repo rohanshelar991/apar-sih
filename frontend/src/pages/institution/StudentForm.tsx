@@ -26,7 +26,7 @@ export const StudentForm: React.FC = () => {
   const [category, setCategory] = useState('REGULAR');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [consentGiven, setConsentGiven] = useState(true);
+  const [consentGiven, setConsentGiven] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

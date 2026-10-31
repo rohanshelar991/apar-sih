@@ -45,9 +45,7 @@ public class StudentController {
         boolean maskApaar = false;
         if (authentication != null) {
             UserAccount user = userAccountRepository.findByEmail(authentication.getName()).orElse(null);
-            if (user != null && "ROLE_INSTITUTION_ADMIN".equals(user.getRole())) {
-                institutionId = user.getInstitution() != null ? user.getInstitution().getId() : institutionId;
-            } else if (user != null && "ROLE_AUTHORIZED_VERIFIER".equals(user.getRole())) {
+            if (user != null && "ROLE_AUTHORIZED_VERIFIER".equals(user.getRole())) {
                 maskApaar = true;
             }
         }
@@ -80,7 +78,7 @@ public class StudentController {
             HttpServletRequest httpRequest
     ) {
         UserAccount user = userAccountRepository.findByEmail(authentication.getName()).orElseThrow();
-        Long instId = user.getInstitution() != null ? user.getInstitution().getId() : 1L;
+        Long instId = user.getInstitution() != null ? user.getInstitution().getId() : null;
         String clientIp = httpRequest.getRemoteAddr();
 
         DTOs.StudentDto created = studentService.createStudent(
@@ -116,13 +114,6 @@ public class StudentController {
             @RequestParam(required = false) Integer year,
             Authentication authentication
     ) {
-        if (authentication != null) {
-            UserAccount user = userAccountRepository.findByEmail(authentication.getName()).orElse(null);
-            if (user != null && "ROLE_INSTITUTION_ADMIN".equals(user.getRole()) && user.getInstitution() != null) {
-                institutionId = user.getInstitution().getId();
-            }
-        }
-
         String csvData = studentService.exportStudentsCsv(institutionId, programmeId, category, status, year);
         byte[] bytes = csvData.getBytes(java.nio.charset.StandardCharsets.UTF_8);
 

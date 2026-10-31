@@ -18,14 +18,14 @@ class ExternalHttpStartupTest {
     @Autowired TestRestTemplate http;
     @Autowired JwtTokenProvider jwt;
 
-    @Test void realHttpServerServesSwaggerAndAuthenticatedFrontendEndpoints() {
+    @Test void realHttpServerServesSwaggerAndRejectsSignedTokensWithoutAnApplicationAccount() {
         assertThat(http.getForEntity("/v3/api-docs", String.class).getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(http.getForEntity("/api/students", String.class).getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(jwt.generateToken("verification@example.invalid", "ROLE_AICTE_REGULATOR", null, "Read-only verification"));
         for (String endpoint : new String[]{"/api/institution/all", "/api/institution/programmes", "/api/students", "/api/audit/logs"}) {
             var response = http.exchange(endpoint, HttpMethod.GET, new HttpEntity<>(headers), String.class);
-            assertThat(response.getStatusCode()).as(endpoint).isEqualTo(HttpStatus.OK);
+            assertThat(response.getStatusCode()).as(endpoint).isEqualTo(HttpStatus.UNAUTHORIZED);
         }
     }
 }

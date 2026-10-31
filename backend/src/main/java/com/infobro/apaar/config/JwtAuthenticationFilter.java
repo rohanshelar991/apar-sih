@@ -19,9 +19,11 @@ import java.util.Collections;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
+    private final com.infobro.apaar.repository.UserAccountRepository users;
 
-    public JwtAuthenticationFilter(JwtTokenProvider tokenProvider) {
+    public JwtAuthenticationFilter(JwtTokenProvider tokenProvider, com.infobro.apaar.repository.UserAccountRepository users) {
         this.tokenProvider = tokenProvider;
+        this.users = users;
     }
 
     @Override
@@ -35,15 +37,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String email = tokenProvider.getEmailFromToken(jwt);
                 String role = tokenProvider.getRoleFromToken(jwt);
 
-                SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(email, null, Collections.singletonList(authority));
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                var user = users.findByEmail(email).orElse(null);
+                Long institutionId = user != null && user.getInstitution() != null ? user.getInstitution().getId() : null;
+                if (user != null && Boolean.TRUE.equals(user.getActive()) && java.util.Objects.equals(role, user.getRole())
+                    && java.util.Objects.equals(institutionId, tokenProvider.getInstitutionIdFromToken(jwt))) {
+                    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(email, null, Collections.singletonList(authority));
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {
-            logger.error("Could not set user authentication in security context", ex);
+            logger.warn("Could not authenticate JWT request");
         }
 
         filterChain.doFilter(request, response);

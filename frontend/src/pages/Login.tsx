@@ -26,23 +26,19 @@ export const Login: React.FC = () => {
       const user = await login(email, password);
       redirectUser(user.role);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid credentials. Try using one-click demo login.');
+      setError(err.code === 'ECONNABORTED' || err.code === 'ERR_NETWORK'
+        ? 'The backend is waking up or temporarily unavailable. Please try again shortly.'
+        : err.response?.data?.message || 'Invalid credentials. Check your email and private demo password.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleDemoLogin = async (demoEmail: string, demoPass: string) => {
+  const selectDemoPersona = (demoEmail: string) => {
+    setEmail(demoEmail);
+    setPassword('');
     setError(null);
-    setIsSubmitting(true);
-    try {
-      const user = await login(demoEmail, demoPass);
-      redirectUser(user.role);
-    } catch (err: any) {
-      setError('Demo login failed. Make sure the backend server is running.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    document.getElementById('signin-password')?.focus();
   };
 
   const redirectUser = (role: string) => {
@@ -105,7 +101,7 @@ export const Login: React.FC = () => {
                   const isInst = account.role === 'ROLE_INSTITUTION_ADMIN';
                   return (
                     <button key={account.email} type="button" disabled={isSubmitting}
-                      onClick={() => handleDemoLogin(account.email, account.password)}
+                      onClick={() => selectDemoPersona(account.email)}
                       className="garuda-persona group rounded-xl p-4 text-left bg-white flex flex-col justify-between transition-colors disabled:opacity-50">
                       <div>
                         <div className="flex items-center justify-between mb-3">
@@ -152,7 +148,7 @@ export const Login: React.FC = () => {
                   <div className="relative">
                     <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                     <input id="signin-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)}
-                      placeholder="admin@bmsce.ac.in" className="w-full text-sm rounded-lg border border-feather bg-white pl-10 pr-3 py-3 text-navy placeholder:text-slate-400 focus:ring-2 focus:ring-primary/15 focus:border-primary" />
+                      placeholder="admin@example.com" className="w-full text-sm rounded-lg border border-feather bg-white pl-10 pr-3 py-3 text-navy placeholder:text-slate-400 focus:ring-2 focus:ring-primary/15 focus:border-primary" />
                   </div>
                 </div>
                 <div>
@@ -170,9 +166,7 @@ export const Login: React.FC = () => {
               </form>
               <div className="mt-6 pt-5 border-t border-feather">
                 <div className="flex items-center gap-2 text-[10px] text-slate-500"><Lock className="w-3 h-3" />Institutional access · Role-based workspace</div>
-                <p className="mt-4 text-[10px] leading-relaxed text-slate-500">Default Demo Password:<br />
-                  <span className="font-mono font-semibold text-navy">Admin@123</span> / <span className="font-mono font-semibold text-navy">Regulator@123</span>
-                </p>
+                <p className="mt-4 text-[10px] leading-relaxed text-slate-500">Isolated demo accounts only. Enter the private password supplied locally. These demo identities imply no institutional or employer affiliation.</p>
               </div>
             </div>
             <p className="text-center text-[10px] text-slate-500 mt-5">APAAR GARUDA NETRA · A Vision for Academic Trust.</p>

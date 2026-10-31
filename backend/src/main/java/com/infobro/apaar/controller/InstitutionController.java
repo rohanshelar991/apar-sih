@@ -24,44 +24,41 @@ public class InstitutionController {
     private final ProgrammeRepository programmeRepository;
     private final StudentRepository studentRepository;
     private final UserAccountRepository userAccountRepository;
+    private final com.infobro.apaar.service.InstitutionAccessService access;
 
     public InstitutionController(InstitutionRepository institutionRepository,
                                  ProgrammeRepository programmeRepository,
                                  StudentRepository studentRepository,
-                                 UserAccountRepository userAccountRepository) {
+                                 UserAccountRepository userAccountRepository, com.infobro.apaar.service.InstitutionAccessService access) {
         this.institutionRepository = institutionRepository;
         this.programmeRepository = programmeRepository;
         this.studentRepository = studentRepository;
         this.userAccountRepository = userAccountRepository;
+        this.access = access;
     }
 
     @GetMapping("/current")
     @Operation(summary = "Get logged in institution administrator's institution profile")
     public ResponseEntity<Institution> getCurrentInstitution(Authentication authentication) {
-        UserAccount user = userAccountRepository.findByEmail(authentication.getName()).orElse(null);
-        if (user == null || user.getInstitution() == null) {
-            // If regulator is calling, return first institution as default context
-            return ResponseEntity.ok(institutionRepository.findAll().get(0));
-        }
+        UserAccount user = access.currentUser();
+        Long own = access.scopeInstitution(null);
+        if (own == null) return ResponseEntity.ok(institutionRepository.findAll().stream().findFirst()
+            .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Institution not found.")));
         return ResponseEntity.ok(user.getInstitution());
     }
 
     @GetMapping("/all")
     @Operation(summary = "List all AICTE accredited institutions")
     public ResponseEntity<List<Institution>> getAllInstitutions() {
-        return ResponseEntity.ok(institutionRepository.findAll());
+        Long own = access.scopeInstitution(null);
+        return ResponseEntity.ok(own == null ? institutionRepository.findAll() : institutionRepository.findById(own).stream().toList());
     }
 
     @GetMapping("/programmes")
     @Operation(summary = "List programmes for institution")
     public ResponseEntity<List<Programme>> getProgrammes(@RequestParam(required = false) Long institutionId,
                                                          Authentication authentication) {
-        if (institutionId == null && authentication != null) {
-            UserAccount user = userAccountRepository.findByEmail(authentication.getName()).orElse(null);
-            if (user != null && user.getInstitution() != null) {
-                institutionId = user.getInstitution().getId();
-            }
-        }
+        institutionId = access.scopeInstitution(institutionId);
         if (institutionId != null) {
             return ResponseEntity.ok(programmeRepository.findByInstitutionId(institutionId));
         }
@@ -72,15 +69,9 @@ public class InstitutionController {
     @Operation(summary = "Get overview KPIs for current institution")
     public ResponseEntity<Map<String, Object>> getInstitutionStats(@RequestParam(required = false) Long institutionId,
                                                                    Authentication authentication) {
-        if (institutionId == null && authentication != null) {
-            UserAccount user = userAccountRepository.findByEmail(authentication.getName()).orElse(null);
-            if (user != null && user.getInstitution() != null) {
-                institutionId = user.getInstitution().getId();
-            }
-        }
-        if (institutionId == null) {
-            institutionId = 1L; // default fallback
-        }
+        institutionId = access.scopeInstitution(institutionId);
+        if (institutionId == null) institutionId = institutionRepository.findAll().stream().findFirst()
+            .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Institution not found.")).getId();
 
         long total = studentRepository.countByInstitutionId(institutionId);
         long valid = studentRepository.countByInstitutionIdAndVerificationStatus(institutionId, "VALID");

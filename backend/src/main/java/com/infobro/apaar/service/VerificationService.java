@@ -24,25 +24,29 @@ public class VerificationService {
     private final VerificationRequestRepository requestRepository;
     private final StudentRepository studentRepository;
     private final AuditService auditService;
+    private final InstitutionAccessService access;
 
     public VerificationService(VerificationTokenRepository tokenRepository,
                                VerificationRequestRepository requestRepository,
                                StudentRepository studentRepository,
-                               AuditService auditService) {
+                               AuditService auditService, InstitutionAccessService access) {
         this.tokenRepository = tokenRepository;
         this.requestRepository = requestRepository;
         this.studentRepository = studentRepository;
         this.auditService = auditService;
+        this.access = access;
     }
 
     @Transactional
     public DTOs.TokenResponse createVerificationToken(DTOs.CreateTokenRequest request,
                                                       String actor, String role, String ip) {
+        access.requireStudent(request.getStudentId());
         Student student = studentRepository.findById(request.getStudentId())
                 .orElseThrow(() -> new NoSuchElementException("Student not found with ID: " + request.getStudentId()));
 
         if (!Boolean.TRUE.equals(student.getConsentGiven())) {
-            throw new IllegalStateException("Student has not granted consent for credential verification sharing.");
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.FORBIDDEN,
+                "Student has not granted consent for credential verification sharing.");
         }
 
         String rawToken = UUID.randomUUID().toString().replace("-", "") +
@@ -109,6 +113,11 @@ public class VerificationService {
         }
 
         Student student = token.getStudent();
+        if (!Boolean.TRUE.equals(student.getConsentGiven())) {
+            dto.setValid(false);
+            dto.setError("Consent for credential verification has been withdrawn.");
+            return dto;
+        }
         dto.setValid(true);
         dto.setIssuer("AICTE APAAR GARUDA NETRA Verification Gateway");
 

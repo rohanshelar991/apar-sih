@@ -64,28 +64,28 @@ public class AuthController {
 
         Map<String, String> inst = new HashMap<>();
         inst.put("role", "ROLE_INSTITUTION_ADMIN");
-        inst.put("title", "Institution Administrator");
-        inst.put("institution", "BMS College of Engineering (INST001)");
-        inst.put("email", "admin@bmsce.ac.in");
-        inst.put("password", "Admin@123");
+        inst.put("title", "DEMO Institution Administrator");
+        inst.put("institution", "Demo Engineering Institute (DEMO001)");
+        inst.put("email", "admin@example.com");
+        inst.put("password", "");
         inst.put("description", "Uploads student batch CSVs, reviews validation errors, corrects flagged records, exports directories.");
         accounts.add(inst);
 
         Map<String, String> reg = new HashMap<>();
         reg.put("role", "ROLE_AICTE_REGULATOR");
-        reg.put("title", "AICTE National Regulator");
-        reg.put("institution", "AICTE Regulation Bureau");
-        reg.put("email", "regulator@aicte-india.org");
-        reg.put("password", "Regulator@123");
+        reg.put("title", "DEMO National Regulator");
+        reg.put("institution", "Isolated demo environment");
+        reg.put("email", "regulator@example.com");
+        reg.put("password", "");
         reg.put("description", "Cross-institutional oversight, intake compliance charts, anomaly center, duplicate escalations, PDF reports.");
         accounts.add(reg);
 
         Map<String, String> ver = new HashMap<>();
         ver.put("role", "ROLE_AUTHORIZED_VERIFIER");
-        ver.put("title", "Authorized Verifier / Employer");
-        ver.put("institution", "Tata Consultancy Services (TCS)");
-        ver.put("email", "verifier@tcs.com");
-        ver.put("password", "Verifier@123");
+        ver.put("title", "DEMO Authorized Verifier");
+        ver.put("institution", "Isolated demo environment");
+        ver.put("email", "verifier@example.com");
+        ver.put("password", "");
         ver.put("description", "Verifies candidate authenticity via QR code or verification token with permitted fields data minimization.");
         accounts.add(ver);
 

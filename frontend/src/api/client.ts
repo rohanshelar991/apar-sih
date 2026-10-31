@@ -6,7 +6,10 @@ import {
 } from '../types';
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? '/api' : undefined),
+  // Render cold starts can exceed a normal short request timeout. No automatic
+  // retries: uploads and other writes must never be submitted twice silently.
+  timeout: 120_000,
 });
 
 // Intercept requests to inject JWT Bearer token

@@ -36,7 +36,7 @@ public class UploadController {
     ) throws Exception {
         UserAccount user = userAccountRepository.findByEmail(authentication.getName()).orElseThrow();
         if (institutionId == null) {
-            institutionId = (user.getInstitution() != null) ? user.getInstitution().getId() : 1L;
+            institutionId = (user.getInstitution() != null) ? user.getInstitution().getId() : null;
         }
         String clientIp = httpRequest.getRemoteAddr();
 
@@ -60,7 +60,6 @@ public class UploadController {
                 institutionId = user.getInstitution().getId();
             }
         }
-        if (institutionId == null) institutionId = 1L;
 
         return ResponseEntity.ok(uploadService.getBatchesByInstitution(institutionId, page, size));
     }
