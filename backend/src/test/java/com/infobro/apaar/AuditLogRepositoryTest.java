@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest(properties = {"spring.flyway.enabled=false", "spring.jpa.hibernate.ddl-auto=create-drop"})
+@org.springframework.test.context.ActiveProfiles("h2")
 class AuditLogRepositoryTest {
     @Autowired AuditLogRepository audits;
     @Test void omittedFiltersReturnNewestFirstAndSupportPagination() {

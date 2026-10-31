@@ -14,8 +14,13 @@ import java.util.Arrays;
 public class PostgresConnectionGuard implements EnvironmentPostProcessor, Ordered {
     public int getOrder() { return Ordered.LOWEST_PRECEDENCE; }
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        if (environment.acceptsProfiles(Profiles.of("postgres & !dev")))
+        if (environment.acceptsProfiles(Profiles.of("postgres & !dev"))) {
             requireTls(environment.getProperty("spring.datasource.url"));
+            if (!"validate".equals(environment.getProperty("spring.jpa.hibernate.ddl-auto")))
+                throw new IllegalStateException("PostgreSQL requires Hibernate ddl-auto=validate; schema creation/update is forbidden.");
+            if (!environment.getProperty("spring.flyway.enabled", Boolean.class, false))
+                throw new IllegalStateException("PostgreSQL requires Flyway enabled; no H2 fallback is permitted.");
+        }
     }
     static void requireTls(String url) {
         if (url == null || !url.startsWith("jdbc:postgresql:") || !url.contains("?"))

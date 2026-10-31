@@ -292,7 +292,7 @@ chmod +x start-demo.sh
 ### Option C: Manual Launch
 1. **Backend (Spring Boot 3 + Java 17)**:
    ```bash
-   tools/maven/bin/mvn -f backend/pom.xml spring-boot:run
+   tools/maven/bin/mvn -f backend/pom.xml spring-boot:run -Dspring-boot.run.profiles=h2
    ```
 2. **Frontend (React 18 + Vite + TypeScript)**:
    ```bash
@@ -403,8 +403,10 @@ APPAR ID AUTHENIQ/
 
 ## PostgreSQL 16, Flyway, and production database setup
 
-The zero-setup H2 demo remains the default (`create-drop`, Flyway off, demo data
-on). The `postgres` profile now uses versioned Flyway migrations for all **10**
+PostgreSQL is now the default profile; it fails rather than falling back to H2.
+The zero-setup H2 demo remains available explicitly through `start-demo.bat`,
+`start-demo.sh`, or the `h2` profile (`create-drop`, Flyway off, demo data on).
+The `postgres` profile uses versioned Flyway migrations for all **10**
 JPA tables and Hibernate `validate`, with separate application and migration
 credentials. Production never seeds demo accounts; local PostgreSQL demos
 require `postgres,dev` and `SEED_DEMO_DATA=true` explicitly.
@@ -413,13 +415,17 @@ Start with [backend/.env.example](backend/.env.example) and follow
 [docs/DATABASE.md](docs/DATABASE.md) for environment loading, local Compose,
 role creation, migrations, Supabase/Neon demos, and private AWS RDS deployment
 in `ap-south-1`. These instructions supersede the older Docker shortcut above.
-Spring Boot does not automatically load `.env` files.
+Spring Boot does not automatically load `.env` files. On Windows,
+`start-supabase.ps1` loads the ignored `backend/.env` without printing values,
+requires SSL, selects `postgres`, disables seeding, and runs on port 8080.
 
 ```powershell
 # After Java 17 and Maven are available:
 mvn -f "backend/pom.xml" test
 # H2: no database configuration needed in a fresh environment.
-mvn -f "backend/pom.xml" spring-boot:run
+mvn -f "backend/pom.xml" spring-boot:run "-Dspring-boot.run.profiles=h2"
+# Supabase: use the existing ignored local environment file after packaging.
+& ".\start-supabase.ps1"
 # PostgreSQL: load env vars and provision roles as documented first.
 mvn -f "backend/pom.xml" flyway:migrate
 ```
@@ -432,3 +438,6 @@ configuration. The migration files are the authoritative database schema.
 
 The PostgreSQL 16 integration tests skip cleanly without Docker. Run the full
 suite with Docker available before deploying to production.
+
+Demo account provisioning is a separate approval-gated operation, never a
+startup seeder or migration. See [the proposed account plan](docs/DEMO_ACCOUNT_PROVISIONING.md).

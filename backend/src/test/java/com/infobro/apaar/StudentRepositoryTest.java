@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest(properties = {"spring.flyway.enabled=false", "spring.jpa.hibernate.ddl-auto=create-drop"})
+@org.springframework.test.context.ActiveProfiles("h2")
 class StudentRepositoryTest {
     @Autowired InstitutionRepository institutions;
     @Autowired ProgrammeRepository programmes;

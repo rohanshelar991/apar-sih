@@ -70,3 +70,9 @@ existing demo accounts pass login and authenticated-profile checks with their
 expected roles. The browser confirms all three persona cards are visible; they
 also remain visible while the backend starts. Other end-to-end workflows listed
 above have not been rechecked.
+
+Subsequent Supabase switch: the current backend uses PostgreSQL, not H2. The
+earlier H2 login results do not establish Supabase login success. Flyway and
+Hibernate validation pass on Supabase, but its user table is empty. Account
+creation and real persona login tests await approval of
+[the separate provisioning plan](DEMO_ACCOUNT_PROVISIONING.md).

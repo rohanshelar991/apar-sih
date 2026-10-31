@@ -4,12 +4,12 @@
 
 | Profile | Schema management | Demo data | TLS |
 | --- | --- | --- | --- |
-| Default (`h2`) | In-memory H2, Hibernate `create-drop`; Flyway disabled | On unless `SEED_DEMO_DATA=false` | Embedded database |
-| `postgres` | Flyway V1/V2, then Hibernate `validate` | Always off, even if the flag is true | `DB_URL` must contain exactly one `sslmode=require` |
+| Explicit `h2` only | In-memory H2, Hibernate `create-drop`; Flyway disabled | On unless `SEED_DEMO_DATA=false` | Embedded database |
+| Default (`postgres`) | Flyway V1/V2, then Hibernate `validate` | Always off, even if the flag is true | `DB_URL` must contain exactly one `sslmode=require` |
 | `postgres,dev` | Same migrations and validation | Only if `SEED_DEMO_DATA=true` | Explicit local development exemption |
 
 `h2,postgres` does not enable the seeder. Never activate `dev` in production.
-The default demo still requires no external database. Its data disappears when
+The explicit H2 demo still requires no external database. Its data disappears when
 the application stops. H2 compatibility mode does not emulate PostgreSQL partial
 indexes, roles, grants, or every PostgreSQL behavior.
 
@@ -79,7 +79,7 @@ Do not include passwords in command-line arguments, URLs, logs, or commits.
 
 | Variable | Meaning / default |
 | --- | --- |
-| `SPRING_PROFILES_ACTIVE` | Unset for H2; `postgres` for hosted DB; `postgres,dev` for local DB |
+| `SPRING_PROFILES_ACTIVE` | Defaults to `postgres`; explicit `h2` for local demo; `postgres,dev` for local PostgreSQL |
 | `DB_URL` | Required PostgreSQL JDBC URL; example `jdbc:postgresql://<host>:5432/<dbname>?sslmode=require` |
 | `DB_USERNAME`, `DB_PASSWORD` | Required application identity: `apaar_app` and its password |
 | `FLYWAY_USER`, `FLYWAY_PASSWORD` | Required migration identity: `apaar_migrator` and its password |
@@ -142,6 +142,31 @@ No credentials are required. Demo account credentials remain described in the
 original README and must never be used for production identities.
 
 ### Load your private environment file
+
+For this Windows Supabase environment, use the committed launcher from the repo
+root after building the backend:
+
+```powershell
+& ".\start-supabase.ps1"
+```
+
+It loads only the database/auth/pool/CORS settings from ignored `backend/.env`,
+forces `postgres`, SSL, Hibernate `validate`, Flyway, and seeding off. Values are
+never printed or passed as command-line credentials. Failures exit with a
+PostgreSQL startup error; the launcher never starts H2. H2 is only available by
+explicitly requesting its profile. The guard rejects destructive Hibernate
+modes and disabled Flyway in the non-development PostgreSQL profile.
+
+Existing Supabase migrations V1/V2 must remain unchanged. The completed switch
+validated both checksums and all 10 entity/table mappings; no migration was
+pending or applied. Read-only checks found zero rows in all 10 tables. Client
+TLS 1.3 was verified to the Session Pooler. `pg_stat_ssl` describes the pooler's
+connection to PostgreSQL, so its value does not establish client-to-pooler TLS.
+
+Account creation remains blocked pending explicit approval of
+[the separate demo-account plan](DEMO_ACCOUNT_PROVISIONING.md). The three
+persona definitions are still exposed by the existing API; that does not mean
+corresponding PostgreSQL user records exist or that login tests have passed.
 
 This loader accepts the simple `KEY=value` format of the example, preserving
 characters after the first equals sign and never printing values:

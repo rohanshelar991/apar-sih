@@ -13,14 +13,16 @@ import static org.assertj.core.api.Assertions.assertThat;
     "spring.datasource.url=jdbc:h2:mem:demo-smoke;MODE=PostgreSQL;DB_CLOSE_DELAY=-1",
     "apaar.seed-demo-data=true"
 })
+@org.springframework.test.context.ActiveProfiles("h2")
 class H2DemoSmokeTest {
     @Autowired Environment environment;
     @Autowired InstitutionRepository institutions;
     @Autowired StudentRepository students;
     @Autowired UserAccountRepository accounts;
 
-    @Test void defaultDemoStartsAndSeedsWithoutFlyway() {
-        assertThat(environment.getDefaultProfiles()).contains("h2");
+    @Test void explicitDemoStartsAndSeedsWithoutFlyway() {
+        assertThat(environment.getDefaultProfiles()).contains("postgres");
+        assertThat(environment.getActiveProfiles()).contains("h2");
         assertThat(environment.getProperty("spring.flyway.enabled")).isEqualTo("false");
         assertThat(environment.getProperty("spring.jpa.hibernate.ddl-auto")).isEqualTo("create-drop");
         assertThat(institutions.count()).isEqualTo(10);

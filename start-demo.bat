@@ -1,4 +1,6 @@
 @echo off
+setlocal
+set "SPRING_PROFILES_ACTIVE=h2"
 echo ==============================================================================
 echo        AICTE APAAR GARUDA NETRA: Student Data Management Platform
 echo              Smart India Hackathon 2026 - Problem Statement 26263

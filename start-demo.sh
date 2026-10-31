@@ -13,7 +13,7 @@ else
 fi
 
 echo "Starting Backend on Port 8080..."
-$MVN_CMD -f backend/pom.xml spring-boot:run &
+SPRING_PROFILES_ACTIVE=h2 "$MVN_CMD" -f backend/pom.xml spring-boot:run &
 BACKEND_PID=$!
 
 echo "Starting Frontend on Port 5173..."
