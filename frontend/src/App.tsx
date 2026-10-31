@@ -19,6 +19,7 @@ import { HelpGuide } from './pages/HelpGuide';
 import { DemoPlayer } from './pages/DemoPlayer';
 import { VerificationQueue } from './pages/VerificationQueue';
 import { NotificationCenter } from './pages/NotificationCenter';
+import { StudentPortal } from './pages/student/StudentPortal';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: string[] }> = ({
   children,
@@ -35,6 +36,9 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: strin
     if (user.role === 'ROLE_AICTE_REGULATOR') {
       return <Navigate to="/regulator/dashboard" replace />;
     }
+    if (user.role === 'ROLE_SUPER_ADMIN') return <Navigate to="/regulator/dashboard" replace />;
+    if (user.role === 'ROLE_STUDENT') return <Navigate to="/student/portal" replace />;
+    if (user.role === 'ROLE_VERIFICATION_OFFICER') return <Navigate to="/verification/requests" replace />;
     if (user.role === 'ROLE_INSTITUTION_ADMIN') {
       return <Navigate to="/institution/overview" replace />;
     }
@@ -49,12 +53,14 @@ const RootRedirect: React.FC = () => {
   if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace />;
   }
-  if (user.role === 'ROLE_AICTE_REGULATOR') {
+  if (user.role === 'ROLE_AICTE_REGULATOR' || user.role === 'ROLE_SUPER_ADMIN') {
     return <Navigate to="/regulator/dashboard" replace />;
   }
   if (user.role === 'ROLE_INSTITUTION_ADMIN') {
     return <Navigate to="/institution/overview" replace />;
   }
+  if (user.role === 'ROLE_STUDENT') return <Navigate to="/student/portal" replace />;
+  if (user.role === 'ROLE_VERIFICATION_OFFICER') return <Navigate to="/verification/requests" replace />;
   return <Navigate to="/verify" replace />;
 };
 
@@ -163,8 +169,9 @@ export const App: React.FC = () => {
               }
             />
 
-            <Route path="/verification/requests" element={<ProtectedRoute allowedRoles={['ROLE_INSTITUTION_ADMIN','ROLE_AUTHORIZED_VERIFIER','ROLE_AICTE_REGULATOR']}><VerificationQueue /></ProtectedRoute>} />
-            <Route path="/notifications" element={<ProtectedRoute allowedRoles={['ROLE_INSTITUTION_ADMIN','ROLE_AUTHORIZED_VERIFIER','ROLE_AICTE_REGULATOR']}><NotificationCenter /></ProtectedRoute>} />
+            <Route path="/verification/requests" element={<ProtectedRoute allowedRoles={['ROLE_INSTITUTION_ADMIN','ROLE_AUTHORIZED_VERIFIER','ROLE_VERIFICATION_OFFICER','ROLE_AICTE_REGULATOR','ROLE_SUPER_ADMIN']}><VerificationQueue /></ProtectedRoute>} />
+            <Route path="/notifications" element={<ProtectedRoute allowedRoles={['ROLE_INSTITUTION_ADMIN','ROLE_AUTHORIZED_VERIFIER','ROLE_VERIFICATION_OFFICER','ROLE_AICTE_REGULATOR','ROLE_SUPER_ADMIN','ROLE_STUDENT']}><NotificationCenter /></ProtectedRoute>} />
+            <Route path="/student/portal" element={<ProtectedRoute allowedRoles={['ROLE_STUDENT']}><StudentPortal /></ProtectedRoute>} />
 
             {/* General Help Guide */}
             <Route path="/help" element={<HelpGuide />} />

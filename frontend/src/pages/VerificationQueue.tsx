@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 type CaseRow = { id:number; studentId:number; studentName:string; maskedApaarId:string; institutionName:string; programme:string; status:string; submittedBy:string; reviewerEmail?:string; remarks?:string; submittedAt:string };
 export const VerificationQueue: React.FC = () => {
-  const { user } = useAuth(); const isReviewer = user?.role === 'ROLE_AUTHORIZED_VERIFIER' || user?.role === 'ROLE_AICTE_REGULATOR';
+  const { user } = useAuth(); const isReviewer = user?.role === 'ROLE_AUTHORIZED_VERIFIER' || user?.role === 'ROLE_VERIFICATION_OFFICER' || user?.role === 'ROLE_AICTE_REGULATOR' || user?.role === 'ROLE_SUPER_ADMIN';
   const [rows,setRows]=useState<CaseRow[]>([]); const [loading,setLoading]=useState(true); const [error,setError]=useState(''); const [busy,setBusy]=useState<number|null>(null); const [reasons,setReasons]=useState<Record<number,string>>({}); const [history,setHistory]=useState<Record<number,any[]>>({});
   const load=useCallback(async()=>{setLoading(true);setError('');try{setRows(await verificationWorkflowApi.queue());}catch(e:any){setError(e?.response?.data?.message||'Could not load verification requests.');}finally{setLoading(false);}},[]);
   useEffect(()=>{load();},[load]);

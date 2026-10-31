@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Logo } from '../components/Logo';
 import { Footer } from '../components/Footer';
+import { authApi } from '../api/client';
 import { Shield, Building2, UserCheck, ArrowRight, Lock, Mail, AlertCircle, Sparkles, Play } from 'lucide-react';
 
 export const Login: React.FC = () => {
@@ -13,6 +14,8 @@ export const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [fullName, setFullName] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,6 +26,11 @@ export const Login: React.FC = () => {
     setError(null);
     setIsSubmitting(true);
     try {
+      if (isRegistering) {
+        if (password.length < 12) { setError('Use a password with at least 12 characters.'); return; }
+        const result = await authApi.registerStudent({ email, fullName, password });
+        setMessage(result.message); setIsRegistering(false); setPassword(''); return;
+      }
       const user = await login(email, password);
       redirectUser(user.role);
     } catch (err: any) {
@@ -33,6 +41,7 @@ export const Login: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+  const [message, setMessage] = useState('');
 
   const selectDemoPersona = (demoEmail: string) => {
     setEmail(demoEmail);
@@ -42,10 +51,14 @@ export const Login: React.FC = () => {
   };
 
   const redirectUser = (role: string) => {
-    if (role === 'ROLE_AICTE_REGULATOR') {
+    if (role === 'ROLE_AICTE_REGULATOR' || role === 'ROLE_SUPER_ADMIN') {
       navigate('/regulator/dashboard');
     } else if (role === 'ROLE_INSTITUTION_ADMIN') {
       navigate('/institution/overview');
+    } else if (role === 'ROLE_STUDENT') {
+      navigate('/student/portal');
+    } else if (role === 'ROLE_VERIFICATION_OFFICER' || role === 'ROLE_AUTHORIZED_VERIFIER') {
+      navigate('/verification/requests');
     } else {
       navigate('/verify');
     }
@@ -134,15 +147,17 @@ export const Login: React.FC = () => {
                 <span className="w-5 h-px bg-gold" /> Welcome back
               </div>
               <div className="mb-7">
-                <h2 className="text-[24px] leading-tight font-semibold text-navy">Sign in to<br />APAAR GARUDA NETRA</h2>
-                <p className="text-xs leading-relaxed text-slate-500 mt-3">Access institutional data or your regulatory bureau dashboard.</p>
+                <h2 className="text-[24px] leading-tight font-semibold text-navy">{isRegistering ? 'Create your student account' : <>Sign in to<br />APAAR GARUDA NETRA</>}</h2>
+                <p className="text-xs leading-relaxed text-slate-500 mt-3">{isRegistering ? 'An institution administrator must link your account to your academic record.' : 'Access your role-based workspace.'}</p>
               </div>
               {error && (
                 <div role="alert" className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2">
                   <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" /><span>{error}</span>
                 </div>
               )}
+              {message && <div role="status" className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">{message}</div>}
               <form onSubmit={handleSubmit} className="space-y-5">
+                {isRegistering && <div><label htmlFor="signup-name" className="block text-xs font-semibold text-navy mb-2">Full name</label><input id="signup-name" required maxLength={120} value={fullName} onChange={(e)=>setFullName(e.target.value)} className="w-full text-sm rounded-lg border border-feather px-3 py-3" autoComplete="name"/></div>}
                 <div>
                   <label htmlFor="signin-email" className="block text-xs font-semibold text-navy mb-2">Official Email Address</label>
                   <div className="relative">
@@ -155,15 +170,16 @@ export const Login: React.FC = () => {
                   <label htmlFor="signin-password" className="block text-xs font-semibold text-navy mb-2">Password</label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-                    <input id="signin-password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)}
+                    <input id="signin-password" type="password" autoComplete={isRegistering ? 'new-password' : 'current-password'} minLength={isRegistering?12:undefined} value={password} onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••••••" className="w-full text-sm rounded-lg border border-feather bg-white pl-10 pr-3 py-3 text-navy placeholder:text-slate-400 focus:ring-2 focus:ring-primary/15 focus:border-primary" />
                   </div>
                 </div>
                 <button type="submit" disabled={isSubmitting}
                   className="w-full py-3.5 px-4 rounded-lg bg-primary hover:bg-primary-600 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
-                  {isSubmitting ? 'Authenticating...' : 'Sign In with Credentials'}<ArrowRight className="w-4 h-4" />
+                  {isSubmitting ? 'Please wait…' : isRegistering ? 'Create Student Account' : 'Sign In with Credentials'}<ArrowRight className="w-4 h-4" />
                 </button>
               </form>
+              <button type="button" onClick={()=>{setIsRegistering((v)=>!v);setError(null);setMessage('');}} className="mt-4 w-full text-xs font-semibold text-primary hover:underline">{isRegistering?'Back to sign in':'Register as a student'}</button>
               <div className="mt-6 pt-5 border-t border-feather">
                 <div className="flex items-center gap-2 text-[10px] text-slate-500"><Lock className="w-3 h-3" />Institutional access · Role-based workspace</div>
                 <p className="mt-4 text-[10px] leading-relaxed text-slate-500">Isolated demo accounts only. Enter the private password supplied locally. These demo identities imply no institutional or employer affiliation.</p>

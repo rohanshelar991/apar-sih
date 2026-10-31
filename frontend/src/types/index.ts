@@ -1,4 +1,4 @@
-export type Role = 'ROLE_INSTITUTION_ADMIN' | 'ROLE_AICTE_REGULATOR' | 'ROLE_AUTHORIZED_VERIFIER';
+export type Role = 'ROLE_INSTITUTION_ADMIN' | 'ROLE_AICTE_REGULATOR' | 'ROLE_AUTHORIZED_VERIFIER' | 'ROLE_SUPER_ADMIN' | 'ROLE_VERIFICATION_OFFICER' | 'ROLE_STUDENT';
 
 export interface User {
   email: string;
@@ -7,6 +7,7 @@ export interface User {
   institutionId?: number;
   institutionCode?: string;
   institutionName?: string;
+  studentId?: number;
 }
 
 export interface DemoAccount {

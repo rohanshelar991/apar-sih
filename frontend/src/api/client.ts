@@ -51,6 +51,16 @@ export const authApi = {
     const res = await api.get<DemoAccount[]>('/auth/demo-accounts');
     return res.data;
   },
+  registerStudent: async (input: { email: string; fullName: string; password: string }) => {
+    const res = await api.post('/auth/register/student', input);
+    return res.data as { status: string; message: string };
+  },
+};
+
+export const studentPortalApi = {
+  getProfile: async () => (await api.get('/student-portal/profile')).data,
+  getProfileUpdates: async () => (await api.get('/student-portal/profile-updates')).data as Array<{ id: number; changes: Record<string, string>; status: string; remarks?: string; createdAt: string; reviewedAt?: string }>,
+  requestProfileUpdate: async (changes: Record<string, string>) => (await api.post('/student-portal/profile-updates', { changes })).data,
 };
 
 export const institutionApi = {

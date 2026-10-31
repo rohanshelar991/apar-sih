@@ -25,12 +25,12 @@ public class InstitutionAccessService {
         if(auth==null || !auth.isAuthenticated()) throw denied();
         UserAccount user=users.findByEmail(auth.getName()).orElseThrow(InstitutionAccessService::denied);
         if(!Boolean.TRUE.equals(user.getActive())) throw denied();
-        if(!"ROLE_INSTITUTION_ADMIN".equals(user.getRole()) && !"ROLE_AICTE_REGULATOR".equals(user.getRole())) throw denied();
+        if(!"ROLE_INSTITUTION_ADMIN".equals(user.getRole()) && !"ROLE_AICTE_REGULATOR".equals(user.getRole()) && !"ROLE_SUPER_ADMIN".equals(user.getRole())) throw denied();
         return user;
     }
     public Long scopeInstitution(Long requested) {
         UserAccount user=currentUser();
-        if("ROLE_AICTE_REGULATOR".equals(user.getRole())) return requested;
+        if("ROLE_AICTE_REGULATOR".equals(user.getRole()) || "ROLE_SUPER_ADMIN".equals(user.getRole())) return requested;
         if(user.getInstitution()==null || user.getInstitution().getId()==null) throw denied();
         Long own=user.getInstitution().getId();
         if(requested!=null && !own.equals(requested)) throw denied();
@@ -57,7 +57,7 @@ public class InstitutionAccessService {
         UserAccount user=currentUser();
         if(issue.getStudent()!=null) requireStudent(issue.getStudent().getId());
         if(issue.getUploadBatch()!=null) requireInstitution(issue.getUploadBatch().getInstitution().getId());
-        if(issue.getStudent()==null && issue.getUploadBatch()==null && !"ROLE_AICTE_REGULATOR".equals(user.getRole())) throw denied();
+        if(issue.getStudent()==null && issue.getUploadBatch()==null && !"ROLE_AICTE_REGULATOR".equals(user.getRole()) && !"ROLE_SUPER_ADMIN".equals(user.getRole())) throw denied();
     }
     private static AccessDeniedException denied() { return new AccessDeniedException("Access denied for institution."); }
 }

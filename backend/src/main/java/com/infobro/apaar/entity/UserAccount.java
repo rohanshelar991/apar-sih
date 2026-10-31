@@ -29,6 +29,10 @@ public class UserAccount {
     @JoinColumn(name = "institution_id")
     private Institution institution;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", unique = true)
+    private Student student;
+
     @Column(nullable = false)
     private Boolean active = true;
 
@@ -64,6 +68,9 @@ public class UserAccount {
 
     public Institution getInstitution() { return institution; }
     public void setInstitution(Institution institution) { this.institution = institution; }
+
+    public Student getStudent() { return student; }
+    public void setStudent(Student student) { this.student = student; }
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }

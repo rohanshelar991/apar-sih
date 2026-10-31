@@ -7,6 +7,9 @@ import com.infobro.apaar.repository.UserAccountRepository;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AuthService {
@@ -68,5 +71,17 @@ public class AuthService {
                 institutionCode,
                 institutionName
         );
+    }
+
+    @Transactional
+    public void registerStudent(String email, String fullName, String password, String clientIp) {
+        String normalizedEmail = email.trim().toLowerCase(java.util.Locale.ROOT);
+        if (userAccountRepository.existsByEmail(normalizedEmail))
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "An account already exists for this email.");
+        UserAccount account = new UserAccount(normalizedEmail, passwordEncoder.encode(password), fullName.trim(), "ROLE_STUDENT", null);
+        account.setActive(true);
+        account = userAccountRepository.save(account);
+        auditService.log(normalizedEmail, "ROLE_STUDENT", "STUDENT_REGISTERED", "UserAccount", account.getId().toString(), clientIp,
+                "Student self-registration completed; institution record linking is pending.");
     }
 }

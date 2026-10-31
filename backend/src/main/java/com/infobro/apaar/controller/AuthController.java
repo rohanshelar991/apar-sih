@@ -10,6 +10,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.util.*;
 
@@ -34,6 +38,16 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/register/student")
+    public ResponseEntity<Map<String, String>> registerStudent(@Valid @RequestBody StudentRegistration body, HttpServletRequest request) {
+        authService.registerStudent(body.email(), body.fullName(), body.password(), request.getRemoteAddr());
+        return ResponseEntity.status(201).body(Map.of("status", "registered", "message", "Account created. An institution administrator must link your academic record before portal access."));
+    }
+
+    public record StudentRegistration(@NotBlank @Email @Size(max = 120) String email,
+                                      @NotBlank @Size(max = 120) String fullName,
+                                      @NotBlank @Size(min = 12, max = 128) String password) {}
+
     @GetMapping("/me")
     @Operation(summary = "Get current authenticated user profile")
     public ResponseEntity<Map<String, Object>> getCurrentUser(Authentication authentication) {
@@ -49,6 +63,7 @@ public class AuthController {
         map.put("email", user.getEmail());
         map.put("fullName", user.getFullName());
         map.put("role", user.getRole());
+        if (user.getStudent() != null) map.put("studentId", user.getStudent().getId());
         if (user.getInstitution() != null) {
             map.put("institutionId", user.getInstitution().getId());
             map.put("institutionCode", user.getInstitution().getCode());

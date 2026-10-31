@@ -35,7 +35,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
   const isRegulator = user?.role === 'ROLE_AICTE_REGULATOR';
   const isInstAdmin = user?.role === 'ROLE_INSTITUTION_ADMIN';
-  const isVerifier = user?.role === 'ROLE_AUTHORIZED_VERIFIER';
+  const isSuperAdmin = user?.role === 'ROLE_SUPER_ADMIN';
+  const isStudent = user?.role === 'ROLE_STUDENT';
+  const isVerifier = user?.role === 'ROLE_AUTHORIZED_VERIFIER' || user?.role === 'ROLE_VERIFICATION_OFFICER';
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `flex items-center gap-3 min-h-11 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
@@ -67,7 +69,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         {/* Navigation list */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
           {/* Institution Menu */}
-          {(isInstAdmin || isRegulator) && (
+          {(isInstAdmin || isRegulator || isSuperAdmin) && (
             <div>
               <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9]">
                 Institution Portal
@@ -117,7 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           )}
 
           {/* AICTE Regulator Menu */}
-          {isRegulator && (
+          {(isRegulator || isSuperAdmin) && (
             <div>
               <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9] flex items-center justify-between">
                 <span>AICTE Regulation</span>
@@ -163,6 +165,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               <NavLink to="/notifications" className={linkClass} onClick={onClose}><Bell className="w-4 h-4"/><span>Notifications</span></NavLink>
             </div></div>
           )}
+
+          {isStudent && <div><div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9]">Student Portal</div><div className="space-y-1">
+            <NavLink to="/student/portal" className={linkClass} onClick={onClose}><Users className="w-4 h-4"/><span>My Academic Profile</span></NavLink>
+            <NavLink to="/notifications" className={linkClass} onClick={onClose}><Bell className="w-4 h-4"/><span>Notifications</span></NavLink>
+          </div></div>}
 
           {/* Verifier Menu */}
           <div>
