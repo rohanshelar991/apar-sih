@@ -142,6 +142,13 @@ class InstitutionSecurityRegressionTest {
         http.perform(get("/api/verify/"+token).with(anonymous())).andExpect(status().isOk()).andExpect(jsonPath("$.valid").value(false)).andExpect(jsonPath("$.studentName").doesNotExist());
         http.perform(put("/api/students/"+ownStudent.getId()).contentType("application/json").content("{\"consentGiven\":true}")).andExpect(status().isOk());
         http.perform(get("/api/verify/"+token).with(anonymous())).andExpect(status().isOk()).andExpect(jsonPath("$.valid").value(false));
+        String renewed=http.perform(post("/api/tokens/generate").contentType("application/json")
+            .content(json.writeValueAsString(Map.of("studentId",ownStudent.getId(),"allowedFields","NAME,APAAR"))))
+            .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        String newToken=json.readTree(renewed).get("token").asText();
+        assertThat(newToken).isNotEqualTo(token);
+        http.perform(get("/api/verify/"+newToken).with(anonymous())).andExpect(status().isOk())
+            .andExpect(jsonPath("$.valid").value(true)).andExpect(jsonPath("$.studentName").value("Student A"));
     }
 
     @Test void verificationRechecksConsentForAnOtherwiseActiveLegacyToken() throws Exception {
@@ -149,6 +156,13 @@ class InstitutionSecurityRegressionTest {
         tokens.save(new VerificationToken(ownStudent,"legacy-consent-token",LocalDateTime.now().plusHours(1),"NAME,DOB,APAAR","Test"));
         http.perform(get("/api/verify/legacy-consent-token").with(anonymous())).andExpect(status().isOk())
             .andExpect(jsonPath("$.valid").value(false)).andExpect(jsonPath("$.studentName").doesNotExist()).andExpect(jsonPath("$.dob").doesNotExist()).andExpect(jsonPath("$.maskedApaarId").doesNotExist());
+    }
+
+    @Test void expiredVerificationTokenReturnsNoStudentFields() throws Exception {
+        tokens.save(new VerificationToken(ownStudent,"expired-verification-token",LocalDateTime.now().minusMinutes(1),"NAME,DOB,APAAR","Test"));
+        http.perform(get("/api/verify/expired-verification-token").with(anonymous())).andExpect(status().isOk())
+            .andExpect(jsonPath("$.valid").value(false)).andExpect(jsonPath("$.studentName").doesNotExist())
+            .andExpect(jsonPath("$.dob").doesNotExist()).andExpect(jsonPath("$.maskedApaarId").doesNotExist());
     }
 
     @Test void threeExistingRolesStillUseRealBcryptLoginAndJwtProfileFlow() throws Exception {
