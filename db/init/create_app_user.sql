@@ -27,11 +27,12 @@ DECLARE table_name text;
 BEGIN
     FOREACH table_name IN ARRAY ARRAY['institutions', 'programmes', 'students',
         'upload_batches', 'validation_issues', 'verification_tokens',
-        'user_accounts', 'verification_requests', 'audit_logs', 'student_history']
+        'user_accounts', 'verification_requests', 'audit_logs', 'student_history',
+        'verification_cases', 'verification_history', 'notifications']
     LOOP
         IF to_regclass('public.' || table_name) IS NOT NULL THEN
             EXECUTE format('GRANT SELECT, INSERT ON TABLE public.%I TO apaar_app', table_name);
-            IF table_name IN ('audit_logs', 'student_history') THEN
+            IF table_name IN ('audit_logs', 'student_history', 'verification_history') THEN
                 EXECUTE format('REVOKE UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER ON TABLE public.%I FROM apaar_app', table_name);
             ELSE
                 EXECUTE format('GRANT UPDATE, DELETE ON TABLE public.%I TO apaar_app', table_name);

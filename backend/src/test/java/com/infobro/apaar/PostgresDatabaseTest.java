@@ -72,7 +72,7 @@ class PostgresDatabaseTest {
     }
 
     @Test void migrationsAndHibernateValidationPassWithSeparateIdentities() throws Exception {
-        assertThat(flyway.info().applied()).hasSize(2);
+        assertThat(flyway.info().applied()).hasSize(3);
         assertThat(environment.getProperty("spring.jpa.hibernate.ddl-auto")).isEqualTo("validate");
         try (var connection = DriverManager.getConnection(postgres.getJdbcUrl(), "apaar_app", appPassword);
              var statement = connection.createStatement()) {
@@ -109,7 +109,7 @@ class PostgresDatabaseTest {
              Statement statement = app.createStatement()) {
             // Even a zero-row mutation must fail with insufficient_privilege, not a constraint error.
             statement.execute("INSERT INTO audit_logs(actor,role,action,entity,timestamp) VALUES ('test','test','test','test',CURRENT_TIMESTAMP)");
-            for (String table : new String[]{"audit_logs", "student_history"}) {
+            for (String table : new String[]{"audit_logs", "student_history", "verification_history"}) {
                 for (String sql : new String[]{"UPDATE " + table + " SET id=id", "DELETE FROM " + table, "TRUNCATE " + table})
                     assertThatThrownBy(() -> statement.execute(sql)).isInstanceOf(SQLException.class)
                         .extracting(e -> ((SQLException)e).getSQLState()).isEqualTo("42501");

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { studentApi, institutionApi } from '../../api/client';
+import { studentApi, institutionApi, verificationWorkflowApi } from '../../api/client';
 import { Student, Programme } from '../../types';
 import { StatusChip } from '../../components/StatusChip';
 import { QrModal } from '../../components/QrModal';
@@ -32,6 +32,8 @@ export const StudentsDirectory: React.FC = () => {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [requestingId, setRequestingId] = useState<number | null>(null);
+  const [workflowMessage, setWorkflowMessage] = useState('');
 
   // QR Modal
   const [selectedStudentForQr, setSelectedStudentForQr] = useState<Student | null>(null);
@@ -207,6 +209,8 @@ export const StudentsDirectory: React.FC = () => {
         </form>
       </div>
 
+      {workflowMessage && <div role="status" className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">{workflowMessage}</div>}
+
       {/* Directory Table */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-soft overflow-hidden">
         {loading ? (
@@ -230,7 +234,7 @@ export const StudentsDirectory: React.FC = () => {
                   <th className="py-3 px-3">Batch</th>
                   <th className="py-3 px-4">Category</th>
                   <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-6 text-right">Verification QR</th>
+                  <th className="py-3 px-6 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -265,6 +269,12 @@ export const StudentsDirectory: React.FC = () => {
                     </td>
 
                     <td className="py-3.5 px-6 text-right">
+                      <div className="flex flex-wrap justify-end gap-2">
+                      <button
+                        disabled={requestingId === student.id}
+                        onClick={async () => { setRequestingId(student.id); setWorkflowMessage(''); try { await verificationWorkflowApi.submit(student.id); setWorkflowMessage(`Review request submitted for ${student.name}.`); } catch (e: any) { setWorkflowMessage(e?.response?.data?.message || 'Could not submit the review request.'); } finally { setRequestingId(null); } }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-semibold disabled:opacity-50"
+                      >{requestingId === student.id ? 'Submitting…' : 'Request review'}</button>
                       <button
                         onClick={() => setSelectedStudentForQr(student)}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-semibold shadow-2xs transition-colors"
@@ -272,6 +282,7 @@ export const StudentsDirectory: React.FC = () => {
                         <QrCode className="w-3.5 h-3.5 text-emerald-600" />
                         <span>Verified QR Card</span>
                       </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

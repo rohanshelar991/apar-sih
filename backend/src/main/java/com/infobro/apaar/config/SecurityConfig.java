@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType("application/json");
-                    response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"" + authException.getMessage() + "\"}");
+                    response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Authentication required.\"}");
                 })
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -62,12 +62,15 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/verify/**").permitAll()
                 .requestMatchers("/api/health").permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/regulator/**", "/api/reports/**", "/api/audit/**").hasRole("AICTE_REGULATOR")
                 .requestMatchers("/api/institution/**", "/api/students/**", "/api/upload/**", "/api/validation/**").hasAnyRole("INSTITUTION_ADMIN", "AICTE_REGULATOR")
                 .requestMatchers("/api/tokens/**").hasAnyRole("INSTITUTION_ADMIN", "AICTE_REGULATOR")
+                .requestMatchers("/api/verification/requests/*/decision").hasAnyRole("AUTHORIZED_VERIFIER", "AICTE_REGULATOR")
+                .requestMatchers("/api/verification/requests/**").hasAnyRole("INSTITUTION_ADMIN", "AUTHORIZED_VERIFIER", "AICTE_REGULATOR")
+                .requestMatchers("/api/verification/students/*/requests").hasAnyRole("INSTITUTION_ADMIN", "AICTE_REGULATOR")
+                .requestMatchers("/api/verification/notifications/**").hasAnyRole("INSTITUTION_ADMIN", "AUTHORIZED_VERIFIER", "AICTE_REGULATOR")
                 .anyRequest().authenticated()
             );
 

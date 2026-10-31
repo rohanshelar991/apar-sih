@@ -34,16 +34,16 @@ class ExternalPostgresSmokeTest {
     @Test void schemaValidationAndConnectivity() throws Exception {
         assertThat(environment.getProperty("spring.jpa.hibernate.ddl-auto")).isEqualTo("validate");
         assertThat(flyway.validateWithResult().validationSuccessful).isTrue();
-        assertThat(flyway.info().current().getVersion().getVersion()).isEqualTo("2");
+        assertThat(flyway.info().current().getVersion().getVersion()).isEqualTo("3");
         try (Connection connection = dataSource.getConnection(); Statement s = connection.createStatement()) {
             try (ResultSet rs = s.executeQuery("select current_user")) {
                 rs.next(); assertThat(rs.getString(1)).isEqualTo("apaar_app");
             }
-            try (ResultSet rs = s.executeQuery("select count(*) from information_schema.tables where table_schema='public' and table_name in ('institutions','programmes','students','upload_batches','validation_issues','student_history','verification_tokens','audit_logs','user_accounts','verification_requests')")) {
-                rs.next(); assertThat(rs.getInt(1)).isEqualTo(10);
+            try (ResultSet rs = s.executeQuery("select count(*) from information_schema.tables where table_schema='public' and table_name in ('institutions','programmes','students','upload_batches','validation_issues','student_history','verification_tokens','audit_logs','user_accounts','verification_requests','verification_cases','verification_history','notifications')")) {
+                rs.next(); assertThat(rs.getInt(1)).isEqualTo(13);
             }
-            try (ResultSet rs = s.executeQuery("select count(*) from information_schema.table_constraints where constraint_schema='public' and constraint_type='FOREIGN KEY' and table_name in ('programmes','students','upload_batches','validation_issues','student_history','verification_tokens','user_accounts','verification_requests')")) {
-                rs.next(); assertThat(rs.getInt(1)).isEqualTo(10);
+            try (ResultSet rs = s.executeQuery("select count(*) from information_schema.table_constraints where constraint_schema='public' and constraint_type='FOREIGN KEY' and table_name in ('programmes','students','upload_batches','validation_issues','student_history','verification_tokens','user_accounts','verification_requests','verification_cases','verification_history','notifications')")) {
+                rs.next(); assertThat(rs.getInt(1)).isEqualTo(14);
             }
         }
     }

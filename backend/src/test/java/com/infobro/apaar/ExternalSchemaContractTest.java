@@ -24,7 +24,7 @@ class ExternalSchemaContractTest {
     @Autowired Flyway flyway;
 
     @Test void everyEntityColumnKeyRelationshipAndDefaultMatchesLiveSchema() throws Exception {
-        assertThat(entityManagerFactory.getMetamodel().getEntities()).hasSize(10);
+        assertThat(entityManagerFactory.getMetamodel().getEntities()).hasSize(13);
         try (Connection connection = dataSource.getConnection()) {
             for (var entity : entityManagerFactory.getMetamodel().getEntities()) {
                 Class<?> type = entity.getJavaType();

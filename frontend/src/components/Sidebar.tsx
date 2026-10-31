@@ -98,6 +98,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                   <span>Students Directory</span>
                 </NavLink>
 
+                <NavLink to="/verification/requests" className={linkClass} onClick={onClose}>
+                  <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                  <span>Verification Requests</span>
+                </NavLink>
+
+                <NavLink to="/notifications" className={linkClass} onClick={onClose}>
+                  <Bell className="w-4 h-4 flex-shrink-0" />
+                  <span>Notifications</span>
+                </NavLink>
+
                 <NavLink to="/institution/students/new" className={linkClass} onClick={onClose}>
                   <UserPlus className="w-4 h-4 flex-shrink-0" />
                   <span>New Student Entry</span>
@@ -145,6 +155,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 </NavLink>
               </div>
             </div>
+          )}
+
+          {isVerifier && (
+            <div><div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9]">Review Workspace</div><div className="space-y-1">
+              <NavLink to="/verification/requests" className={linkClass} onClick={onClose}><CheckCircle className="w-4 h-4"/><span>Verification Requests</span></NavLink>
+              <NavLink to="/notifications" className={linkClass} onClick={onClose}><Bell className="w-4 h-4"/><span>Notifications</span></NavLink>
+            </div></div>
           )}
 
           {/* Verifier Menu */}

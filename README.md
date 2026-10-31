@@ -38,7 +38,7 @@ and compatibility notes.
 
 
 - 🌐 **In-App Theater Player**: [http://localhost:5173/demo](http://localhost:5173/demo) *(Integrated interactive chapter player with one-click MP4 and thumbnail download)*
-- 💻 **GitHub Repository**: [For repo link click here](https://github.com/rohanshelar991/apar-sih))
+- 💻 **GitHub Repository**: [APAAR GARUDA NETRA](https://github.com/rohanshelar991/apar-sih)
 
 ---
 
@@ -384,8 +384,8 @@ APPAR ID AUTHENIQ/
 ├── sample-uploads/                 # Synthetic Evaluation CSV Files
 │   ├── new_admissions_INST001.csv  # 60 Rows triggering all 15 anomaly conditions
 │   └── apaar_student_template.csv  # Blank Template for institutions
-├── APAAR_Connect_Demo_Video.mp4    # Official 02:58 min Demonstration Video
-├── APAAR_Connect_YouTube_Thumbnail.jpg # 16:9 Official YouTube Thumbnail
+├── frontend/public/demo_video.mp4 # In-app walkthrough video
+├── frontend/public/thumbnail.jpg  # In-app walkthrough thumbnail
 ├── start-demo.bat                  # One-click Windows startup script
 ├── start-demo.sh                   # One-click Linux/Mac startup script
 └── docker-compose.yml              # PostgreSQL Docker infrastructure

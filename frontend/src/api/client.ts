@@ -255,3 +255,14 @@ export const auditApi = {
 };
 
 export default api;
+
+
+export const verificationWorkflowApi = {
+  submit: async (studentId: number) => (await api.post(`/verification/students/${studentId}/requests`)).data,
+  queue: async () => (await api.get<any[]>('/verification/requests')).data,
+  history: async (id: number) => (await api.get<any[]>(`/verification/requests/${id}/history`)).data,
+  decide: async (id: number, status: 'UNDER_REVIEW' | 'APPROVED' | 'REJECTED', remarks?: string) =>
+    (await api.post(`/verification/requests/${id}/decision`, { status, remarks })).data,
+  notifications: async () => (await api.get<any[]>('/verification/notifications')).data,
+  markRead: async (id: number) => api.post(`/verification/notifications/${id}/read`),
+};

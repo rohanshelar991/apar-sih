@@ -17,6 +17,8 @@ import { VerifierPage } from './pages/verifier/VerifierPage';
 import { VerifyDetail } from './pages/verifier/VerifyDetail';
 import { HelpGuide } from './pages/HelpGuide';
 import { DemoPlayer } from './pages/DemoPlayer';
+import { VerificationQueue } from './pages/VerificationQueue';
+import { NotificationCenter } from './pages/NotificationCenter';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: string[] }> = ({
   children,
@@ -160,6 +162,9 @@ export const App: React.FC = () => {
                 </ProtectedRoute>
               }
             />
+
+            <Route path="/verification/requests" element={<ProtectedRoute allowedRoles={['ROLE_INSTITUTION_ADMIN','ROLE_AUTHORIZED_VERIFIER','ROLE_AICTE_REGULATOR']}><VerificationQueue /></ProtectedRoute>} />
+            <Route path="/notifications" element={<ProtectedRoute allowedRoles={['ROLE_INSTITUTION_ADMIN','ROLE_AUTHORIZED_VERIFIER','ROLE_AICTE_REGULATOR']}><NotificationCenter /></ProtectedRoute>} />
 
             {/* General Help Guide */}
             <Route path="/help" element={<HelpGuide />} />

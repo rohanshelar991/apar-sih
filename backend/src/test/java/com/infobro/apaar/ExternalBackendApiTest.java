@@ -116,6 +116,53 @@ class ExternalBackendApiTest {
         assertThat(invalid.getIssues()).anyMatch(i -> i.getRuleCode().equals("APAAR_FORMAT"));
     }
 
+    @Test void verificationWorkflowDuplicateProtectionDecisionsHistoryAndNotifications() throws Exception {
+        Institution institution = institution();
+        Programme programme = programmes.saveAndFlush(new Programme(institution, "Workflow programme", "WF", 2026, 100, 0));
+        Student student = students.saveAndFlush(new Student("202688880001", "Workflow student", LocalDate.of(2005, 1, 1),
+            "Other", programme, institution, 2026, "REGULAR", null, null, "PENDING", true));
+        String adminEmail = UUID.randomUUID() + "@example.invalid";
+        String reviewerEmail = UUID.randomUUID() + "@example.invalid";
+        users.saveAndFlush(new UserAccount(adminEmail, encoder.encode(UUID.randomUUID().toString()), "Workflow admin", "ROLE_INSTITUTION_ADMIN", institution));
+        users.saveAndFlush(new UserAccount(reviewerEmail, encoder.encode(UUID.randomUUID().toString()), "Workflow reviewer", "ROLE_AUTHORIZED_VERIFIER", null));
+        String admin = "Bearer " + jwt.generateToken(adminEmail, "ROLE_INSTITUTION_ADMIN", institution.getId(), "Workflow admin");
+        String reviewer = "Bearer " + jwt.generateToken(reviewerEmail, "ROLE_AUTHORIZED_VERIFIER", null, "Workflow reviewer");
+
+        String body = mvc.perform(post("/api/verification/students/{id}/requests", student.getId()).header("Authorization", admin))
+            .andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("PENDING"))
+            .andReturn().getResponse().getContentAsString();
+        long caseId = json.readTree(body).get("id").asLong();
+        mvc.perform(post("/api/verification/students/{id}/requests", student.getId()).header("Authorization", admin))
+            .andExpect(status().isConflict());
+        mvc.perform(get("/api/verification/requests").header("Authorization", reviewer))
+            .andExpect(status().isOk()).andExpect(jsonPath("$[0].studentId").value(student.getId()));
+        mvc.perform(post("/api/verification/requests/{id}/decision", caseId).header("Authorization", reviewer)
+            .contentType("application/json").content(json.writeValueAsString(java.util.Map.of("status", "REJECTED", "remarks", " "))))
+            .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/verification/requests/{id}/decision", caseId).header("Authorization", reviewer)
+            .contentType("application/json").content(json.writeValueAsString(java.util.Map.of("status", "UNDER_REVIEW", "remarks", "Source record being checked."))))
+            .andExpect(status().isOk());
+        mvc.perform(post("/api/verification/requests/{id}/decision", caseId).header("Authorization", reviewer)
+            .contentType("application/json").content(json.writeValueAsString(java.util.Map.of("status", "APPROVED", "remarks", "Institutional record reviewed."))))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.status").value("APPROVED"));
+        mvc.perform(get("/api/verification/requests/{id}/history", caseId).header("Authorization", admin))
+            .andExpect(status().isOk()).andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(3)));
+        String notifications = mvc.perform(get("/api/verification/notifications").header("Authorization", admin))
+            .andExpect(status().isOk()).andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(2)))
+            .andReturn().getResponse().getContentAsString();
+        long notificationId = json.readTree(notifications).get(0).get("id").asLong();
+        mvc.perform(post("/api/verification/notifications/{id}/read", notificationId).header("Authorization", admin))
+            .andExpect(status().isNoContent());
+        mvc.perform(get("/api/verification/notifications").header("Authorization", admin))
+            .andExpect(status().isOk()).andExpect(jsonPath("$[0].readAt").isNotEmpty());
+        mvc.perform(get("/api/verification/requests").header("Authorization", admin))
+            .andExpect(status().isOk()).andExpect(jsonPath("$[0].status").value("APPROVED"));
+        mvc.perform(get("/api/verification/requests").header("Authorization", reviewer)).andExpect(status().isOk());
+        mvc.perform(get("/api/verification/requests").header("Authorization", "Bearer " + jwt.generateToken(
+            "unregistered@example.invalid", "ROLE_AUTHORIZED_VERIFIER", null, "Unregistered")))
+            .andExpect(status().isUnauthorized());
+    }
+
     @Test void errorsAndConfiguredCors() throws Exception {
         mvc.perform(get("/api/students")).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.error").value("Unauthorized"));
         users.saveAndFlush(new UserAccount("verifier-probe@example.invalid",encoder.encode(UUID.randomUUID().toString()),"Probe verifier","ROLE_AUTHORIZED_VERIFIER",null));
