@@ -108,13 +108,13 @@ export const RegulatorDashboard: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/90 shadow-soft">
         <div>
           <span className="text-xs font-bold text-purple-700 tracking-wide uppercase">
-            AICTE Regulation Bureau &bull; Smart Automation Oversight
+            Oversight workspace &bull; Demonstration environment
           </span>
           <h2 className="text-2xl font-extrabold text-navy mt-0.5">
-            National Intake & Verification Dashboard
+            Institution Intake &amp; Verification Dashboard
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            Real-time compliance monitoring across AICTE-approved institutions via APAAR ID linkage
+            Database-backed institution and programme summaries. Official APAAR verification is not connected.
           </p>
         </div>
 
@@ -184,7 +184,7 @@ export const RegulatorDashboard: React.FC = () => {
           <div className="text-2xl font-extrabold text-emerald-950">
             {kpi ? kpi.actualEnrolment.toLocaleString() : '—'}
           </div>
-          <span className="text-[10px] text-emerald-700 mt-1">Verified with APAAR</span>
+          <span className="text-[10px] text-emerald-700 mt-1">Recorded in this prototype</span>
         </div>
 
         {/* Open Exceptions */}
@@ -234,7 +234,7 @@ export const RegulatorDashboard: React.FC = () => {
                 onChange={(e) => setSelectedInstId(e.target.value)}
                 className="text-xs rounded-xl border border-slate-200 px-3 py-1.5 bg-slate-50 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 max-w-[220px]"
               >
-                <option value="">All 10 Institutions (Aggregate)</option>
+                <option value="">All Institutions (Aggregate)</option>
                 {institutions.map((inst) => (
                   <option key={inst.id} value={inst.id}>
                     {inst.code} - {inst.name}

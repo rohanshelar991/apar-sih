@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Logo } from '../components/Logo';
 import { Footer } from '../components/Footer';
+import { GovernmentUtilityBar } from '../components/GovernmentUtilityBar';
 import { authApi } from '../api/client';
 import { Shield, Building2, UserCheck, ArrowRight, Lock, Mail, AlertCircle, Sparkles, Play } from 'lucide-react';
 
@@ -66,6 +67,7 @@ export const Login: React.FC = () => {
 
   return (
     <div className="garuda-login min-h-screen flex flex-col">
+      <GovernmentUtilityBar />
       <header className="border-b border-feather bg-white px-5 sm:px-8 lg:px-12 py-4">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <Logo size="md" />
@@ -81,21 +83,21 @@ export const Login: React.FC = () => {
         </div>
       </header>
 
-      <main className="flex-1 flex items-center px-4 sm:px-8 lg:px-12 py-7 lg:py-10">
+      <main id="main-content" tabIndex={-1} className="flex-1 flex items-center px-4 sm:px-8 lg:px-12 py-7 lg:py-10">
         <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-10 items-start">
           <div className="lg:col-span-7 space-y-6">
             <section className="garuda-hero relative overflow-hidden rounded-2xl px-6 py-7 sm:p-9 text-white">
               <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D8BA7D] mb-5">
                 <span className="w-6 h-px bg-gold" />
-                AICTE Regulation Bureau · Academic Intelligence
+                Student identity services · Demonstration environment
               </div>
               <h1 className="relative max-w-xl text-[32px] sm:text-[40px] xl:text-[44px] leading-[1.15] font-semibold tracking-tight">
                 One identity.<br />Countless academic journeys.<br />
                 <span className="text-[#D8BA7D]">One trusted vision.</span>
               </h1>
               <p className="relative mt-5 text-sm leading-relaxed text-[#D0D8E5] max-w-lg">
-                A unified platform for student data management, institutional verification,
-                academic integrity, and privacy-preserving identity validation.
+                A role-based prototype for student records, institutional review, and
+                privacy-aware academic identity workflows. Government verification services are not connected.
               </p>
               <div className="mt-7 flex items-center gap-2 text-[11px] tracking-wide text-[#D8BA7D]">
                 <Shield className="w-3.5 h-3.5" />

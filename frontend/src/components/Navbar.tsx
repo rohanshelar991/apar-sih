@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Building2, Shield, LogOut, HelpCircle, Bell, Play } from 'lucide-react';
+import { Building2, Shield, LogOut, HelpCircle, Bell, Play, Menu, Landmark } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 interface NavbarProps {
@@ -31,6 +31,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         icon: <Building2 className="w-3.5 h-3.5 text-blue-600" />,
       };
     }
+    if (role === 'ROLE_SUPER_ADMIN') return { label: 'Super administrator', color: 'bg-slate-100 text-slate-800 border-slate-300', icon: <Shield className="w-3.5 h-3.5 text-slate-700" /> };
+    if (role === 'ROLE_STUDENT') return { label: 'Student', color: 'bg-emerald-50 text-emerald-800 border-emerald-200', icon: <Building2 className="w-3.5 h-3.5 text-emerald-700" /> };
+    if (role === 'ROLE_VERIFICATION_OFFICER') return { label: 'Verification officer', color: 'bg-amber-50 text-amber-900 border-amber-200', icon: <Shield className="w-3.5 h-3.5 text-amber-700" /> };
     return {
       label: 'Authorized Verifier',
       color: 'bg-emerald-100 text-emerald-800 border-emerald-200',
@@ -41,16 +44,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
   const roleInfo = getRoleBadge(user?.role);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 sm:px-6 backdrop-blur-md shadow-sm no-print">
+    <header className="sticky top-0 z-30 flex min-h-16 w-full items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6 shadow-sm no-print">
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleSidebar}
           className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 lg:hidden"
           aria-label="Toggle Navigation"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <Menu className="w-5 h-5" />
         </button>
 
         {/* Institution / Regulator Context Indicator */}
@@ -64,11 +65,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-purple-50/70 border border-purple-200/60">
-              <Shield className="w-4 h-4 text-purple-700" />
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-50 border border-primary-100">
+              <Landmark className="w-4 h-4 text-primary" />
               <div className="leading-none">
-                <span className="text-xs font-bold text-purple-900 block">AICTE Central Bureau</span>
-                <span className="text-[10px] text-purple-700 font-medium">National Regulation & Compliance</span>
+                <span className="text-xs font-bold text-navy block">Academic Oversight Workspace</span>
+                <span className="text-[10px] text-slate-600 font-medium">Role-authorized access</span>
               </div>
             </div>
           )}
@@ -76,6 +77,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
       </div>
 
       <div className="flex items-center gap-3">
+        <Link to="/notifications" aria-label="Notifications" title="Notifications" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-primary">
+          <Bell className="w-4 h-4" />
+        </Link>
         {/* Watch Demo Video Link */}
         <Link
           to="/demo"

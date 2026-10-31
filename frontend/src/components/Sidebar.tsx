@@ -122,13 +122,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {(isRegulator || isSuperAdmin) && (
             <div>
               <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9] flex items-center justify-between">
-                <span>AICTE Regulation</span>
-                <span className="text-[9px] bg-purple-100 text-purple-700 px-1 py-0.2 rounded font-semibold">Bureau</span>
+                <span>Oversight &amp; reports</span>
+                <span className="text-[9px] bg-purple-100 text-purple-700 px-1 py-0.2 rounded font-semibold">Prototype</span>
               </div>
               <div className="space-y-1">
                 <NavLink to="/regulator/dashboard" className={linkClass} onClick={onClose}>
                   <Building className="w-4 h-4 flex-shrink-0" />
-                  <span>National Dashboard</span>
+                  <span>Oversight dashboard</span>
                 </NavLink>
 
                 <NavLink to="/regulator/anomalies" className={linkClass} onClick={onClose}>
