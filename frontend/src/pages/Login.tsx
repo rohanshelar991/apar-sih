@@ -26,6 +26,10 @@ export const Login: React.FC = () => {
       setError('Please enter both email and password.');
       return;
     }
+    if (!import.meta.env.DEV && !import.meta.env.VITE_API_BASE_URL) {
+      setError('The backend API is not configured for this deployment. Set VITE_API_BASE_URL in Vercel, then redeploy.');
+      return;
+    }
     setError(null);
     setIsSubmitting(true);
     try {

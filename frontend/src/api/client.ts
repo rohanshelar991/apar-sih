@@ -49,6 +49,9 @@ export const authApi = {
   },
   getDemoAccounts: async () => {
     const res = await api.get<DemoAccount[]>('/auth/demo-accounts');
+    if (!Array.isArray(res.data)) {
+      throw new Error('Demo account endpoint returned an invalid response');
+    }
     return res.data;
   },
   registerStudent: async (input: { email: string; fullName: string; password: string }) => {
