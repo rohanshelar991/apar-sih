@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Logo } from './Logo';
+import { useLanguage } from '../context/LanguageContext';
 import {
   LayoutDashboard,
   Upload,
@@ -26,6 +27,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -72,23 +74,23 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {(isInstAdmin || isRegulator || isSuperAdmin) && (
             <div>
               <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9]">
-                Institution Portal
+                {t('institutionPortal')}
               </div>
               <div className="space-y-1">
                 <NavLink to="/institution/overview" className={linkClass} onClick={onClose}>
                   <LayoutDashboard className="w-4 h-4 flex-shrink-0" />
-                  <span>Overview</span>
+                  <span>{t('overview')}</span>
                 </NavLink>
 
                 <NavLink to="/institution/upload" className={linkClass} onClick={onClose}>
                   <Upload className="w-4 h-4 flex-shrink-0" />
-                  <span>Upload Admissions</span>
+                  <span>{t('upload')}</span>
                 </NavLink>
 
                 <NavLink to="/institution/issues" className={linkClass} onClick={onClose}>
                   <AlertTriangle className="w-4 h-4 flex-shrink-0 text-amber-500" />
                   <div className="flex items-center justify-between flex-1">
-                    <span>Validation Issues</span>
+                    <span>{t('issues')}</span>
                     <span className="text-[10px] bg-amber-100 text-amber-800 font-bold px-1.5 py-0.5 rounded-full">
                       Live
                     </span>
@@ -97,22 +99,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
                 <NavLink to="/institution/students" className={linkClass} onClick={onClose}>
                   <Users className="w-4 h-4 flex-shrink-0" />
-                  <span>Students Directory</span>
+                  <span>{t('students')}</span>
                 </NavLink>
 
                 <NavLink to="/verification/requests" className={linkClass} onClick={onClose}>
                   <CheckCircle className="w-4 h-4 flex-shrink-0" />
-                  <span>Verification Requests</span>
+                  <span>{t('requests')}</span>
                 </NavLink>
 
                 <NavLink to="/notifications" className={linkClass} onClick={onClose}>
                   <Bell className="w-4 h-4 flex-shrink-0" />
-                  <span>Notifications</span>
+                  <span>{t('notifications')}</span>
                 </NavLink>
 
                 <NavLink to="/institution/students/new" className={linkClass} onClick={onClose}>
                   <UserPlus className="w-4 h-4 flex-shrink-0" />
-                  <span>New Student Entry</span>
+                  <span>{t('newStudent')}</span>
                 </NavLink>
               </div>
             </div>
@@ -122,19 +124,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           {(isRegulator || isSuperAdmin) && (
             <div>
               <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9] flex items-center justify-between">
-                <span>Oversight &amp; reports</span>
+                <span>{t('oversight')}</span>
                 <span className="text-[9px] bg-purple-100 text-purple-700 px-1 py-0.2 rounded font-semibold">Prototype</span>
               </div>
               <div className="space-y-1">
                 <NavLink to="/regulator/dashboard" className={linkClass} onClick={onClose}>
                   <Building className="w-4 h-4 flex-shrink-0" />
-                  <span>Oversight dashboard</span>
+                  <span>{t('dashboard')}</span>
                 </NavLink>
 
                 <NavLink to="/regulator/anomalies" className={linkClass} onClick={onClose}>
                   <ShieldAlert className="w-4 h-4 flex-shrink-0 text-red-500" />
                   <div className="flex items-center justify-between flex-1">
-                    <span>Anomaly Center</span>
+                    <span>{t('anomalies')}</span>
                     <span className="text-[10px] bg-red-100 text-red-700 font-bold px-1.5 py-0.5 rounded-full">
                       Alert
                     </span>
@@ -143,48 +145,48 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
                 <NavLink to="/regulator/alerts" className={linkClass} onClick={onClose}>
                   <Bell className="w-4 h-4 flex-shrink-0" />
-                  <span>Alerts Feed</span>
+                  <span>{t('alerts')}</span>
                 </NavLink>
 
                 <NavLink to="/regulator/reports" className={linkClass} onClick={onClose}>
                   <FileText className="w-4 h-4 flex-shrink-0" />
-                  <span>Summary Reports</span>
+                  <span>{t('reports')}</span>
                 </NavLink>
 
                 <NavLink to="/regulator/audit" className={linkClass} onClick={onClose}>
                   <History className="w-4 h-4 flex-shrink-0" />
-                  <span>Audit Trail</span>
+                  <span>{t('audit')}</span>
                 </NavLink>
               </div>
             </div>
           )}
 
           {isVerifier && (
-            <div><div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9]">Review Workspace</div><div className="space-y-1">
-              <NavLink to="/verification/requests" className={linkClass} onClick={onClose}><CheckCircle className="w-4 h-4"/><span>Verification Requests</span></NavLink>
-              <NavLink to="/notifications" className={linkClass} onClick={onClose}><Bell className="w-4 h-4"/><span>Notifications</span></NavLink>
+            <div><div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9]">{t('reviewWorkspace')}</div><div className="space-y-1">
+              <NavLink to="/verification/requests" className={linkClass} onClick={onClose}><CheckCircle className="w-4 h-4"/><span>{t('requests')}</span></NavLink>
+              <NavLink to="/notifications" className={linkClass} onClick={onClose}><Bell className="w-4 h-4"/><span>{t('notifications')}</span></NavLink>
             </div></div>
           )}
 
-          {isStudent && <div><div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9]">Student Portal</div><div className="space-y-1">
-            <NavLink to="/student/portal" className={linkClass} onClick={onClose}><Users className="w-4 h-4"/><span>My Academic Profile</span></NavLink>
-            <NavLink to="/notifications" className={linkClass} onClick={onClose}><Bell className="w-4 h-4"/><span>Notifications</span></NavLink>
+          {isStudent && <div><div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9]">{t('studentPortal')}</div><div className="space-y-1">
+            <NavLink to="/student/portal" className={linkClass} onClick={onClose}><Users className="w-4 h-4"/><span>{t('profile')}</span></NavLink>
+            <NavLink to="/notifications" className={linkClass} onClick={onClose}><Bell className="w-4 h-4"/><span>{t('notifications')}</span></NavLink>
           </div></div>}
 
           {/* Verifier Menu */}
           <div>
             <div className="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-[#AAB6C9]">
-              Public / Verifier Flow
+              {t('publicVerifier')}
             </div>
             <div className="space-y-1">
               <NavLink to="/verify" className={linkClass} onClick={onClose}>
                 <QrCode className="w-4 h-4 flex-shrink-0 text-emerald-600" />
-                <span>Verify Credential</span>
+                <span>{t('verifyCredential')}</span>
               </NavLink>
 
               <NavLink to="/help" className={linkClass} onClick={onClose}>
                 <HelpCircle className="w-4 h-4 flex-shrink-0 text-[#AAB6C9]" />
-                <span>Guide & Demo Walkthrough</span>
+                <span>{t('helpDemo')}</span>
               </NavLink>
             </div>
           </div>
@@ -205,7 +207,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
             <button
               onClick={handleLogout}
-              title="Logout"
+              title={t('logout')}
               className="p-1.5 text-[#AAB6C9] hover:text-red-600 hover:bg-white/10 rounded-lg transition-colors"
             >
               <LogOut className="w-4 h-4" />

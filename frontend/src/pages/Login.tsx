@@ -4,11 +4,13 @@ import { useAuth } from '../context/AuthContext';
 import { Logo } from '../components/Logo';
 import { Footer } from '../components/Footer';
 import { GovernmentUtilityBar } from '../components/GovernmentUtilityBar';
+import { useLanguage } from '../context/LanguageContext';
 import { authApi } from '../api/client';
-import { Shield, Building2, UserCheck, ArrowRight, Lock, Mail, AlertCircle, Sparkles, Play } from 'lucide-react';
+import { Shield, Building2, UserCheck, ArrowRight, Lock, Mail, AlertCircle, Sparkles } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const { login, demoAccounts, loading } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -71,15 +73,6 @@ export const Login: React.FC = () => {
       <header className="border-b border-feather bg-white px-5 sm:px-8 lg:px-12 py-4">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <Logo size="md" />
-          <div className="flex flex-wrap items-center gap-3">
-            <Link to="/demo" className="inline-flex items-center gap-2 rounded-lg border border-feather px-3 py-2.5 text-xs font-semibold text-navy hover:bg-ivory transition-colors">
-              <Play className="w-3.5 h-3.5 text-gold-dark fill-current" />
-              <span>Watch Video Demo (2:52 min)</span>
-            </Link>
-            <span className="text-[10px] leading-relaxed font-semibold tracking-wide text-slate-500 border-l border-feather pl-3">
-              Smart India Hackathon 2026<br /><span className="text-navy">PS 26263 · Smart Automation</span>
-            </span>
-          </div>
         </div>
       </header>
 
@@ -89,15 +82,13 @@ export const Login: React.FC = () => {
             <section className="garuda-hero relative overflow-hidden rounded-2xl px-6 py-7 sm:p-9 text-white">
               <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#D8BA7D] mb-5">
                 <span className="w-6 h-px bg-gold" />
-                Student identity services · Demonstration environment
+                {t('loginKicker')}
               </div>
               <h1 className="relative max-w-xl text-[32px] sm:text-[40px] xl:text-[44px] leading-[1.15] font-semibold tracking-tight">
-                One identity.<br />Countless academic journeys.<br />
-                <span className="text-[#D8BA7D]">One trusted vision.</span>
+                {t('loginHeadline')}
               </h1>
               <p className="relative mt-5 text-sm leading-relaxed text-[#D0D8E5] max-w-lg">
-                A role-based prototype for student records, institutional review, and
-                privacy-aware academic identity workflows. Government verification services are not connected.
+                {t('loginDescription')}
               </p>
               <div className="mt-7 flex items-center gap-2 text-[11px] tracking-wide text-[#D8BA7D]">
                 <Shield className="w-3.5 h-3.5" />
@@ -107,7 +98,7 @@ export const Login: React.FC = () => {
 
             <section aria-labelledby="demo-personas-heading">
               <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                <h2 id="demo-personas-heading" className="text-[11px] font-bold uppercase tracking-[0.12em] text-navy">Explore a demo persona</h2>
+                <h2 id="demo-personas-heading" className="text-[11px] font-bold uppercase tracking-[0.12em] text-navy">{t('explorePersona')}</h2>
                 <span className="text-[10px] text-slate-500">One-click instant login · Judges Quick Access</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -149,8 +140,8 @@ export const Login: React.FC = () => {
                 <span className="w-5 h-px bg-gold" /> Welcome back
               </div>
               <div className="mb-7">
-                <h2 className="text-[24px] leading-tight font-semibold text-navy">{isRegistering ? 'Create your student account' : <>Sign in to<br />APAAR GARUDA NETRA</>}</h2>
-                <p className="text-xs leading-relaxed text-slate-500 mt-3">{isRegistering ? 'An institution administrator must link your account to your academic record.' : 'Access your role-based workspace.'}</p>
+                <h2 className="text-[24px] leading-tight font-semibold text-navy">{isRegistering ? t('registering') : <>Sign in to<br />APAAR GARUDA NETRA</>}</h2>
+                <p className="text-xs leading-relaxed text-slate-500 mt-3">{isRegistering ? 'An institution administrator must link your account to your academic record.' : t('accessWorkspace')}</p>
               </div>
               {error && (
                 <div role="alert" className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2">
@@ -161,7 +152,7 @@ export const Login: React.FC = () => {
               <form onSubmit={handleSubmit} className="space-y-5">
                 {isRegistering && <div><label htmlFor="signup-name" className="block text-xs font-semibold text-navy mb-2">Full name</label><input id="signup-name" required maxLength={120} value={fullName} onChange={(e)=>setFullName(e.target.value)} className="w-full text-sm rounded-lg border border-feather px-3 py-3" autoComplete="name"/></div>}
                 <div>
-                  <label htmlFor="signin-email" className="block text-xs font-semibold text-navy mb-2">Official Email Address</label>
+                  <label htmlFor="signin-email" className="block text-xs font-semibold text-navy mb-2">{t('email')}</label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                     <input id="signin-email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)}
@@ -169,7 +160,7 @@ export const Login: React.FC = () => {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="signin-password" className="block text-xs font-semibold text-navy mb-2">Password</label>
+                  <label htmlFor="signin-password" className="block text-xs font-semibold text-navy mb-2">{t('password')}</label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                     <input id="signin-password" type="password" autoComplete={isRegistering ? 'new-password' : 'current-password'} minLength={isRegistering?12:undefined} value={password} onChange={(e) => setPassword(e.target.value)}
@@ -178,10 +169,10 @@ export const Login: React.FC = () => {
                 </div>
                 <button type="submit" disabled={isSubmitting}
                   className="w-full py-3.5 px-4 rounded-lg bg-primary hover:bg-primary-600 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
-                  {isSubmitting ? 'Please wait…' : isRegistering ? 'Create Student Account' : 'Sign In with Credentials'}<ArrowRight className="w-4 h-4" />
+                  {isSubmitting ? 'Please wait…' : isRegistering ? t('registering') : t('signIn')}<ArrowRight className="w-4 h-4" />
                 </button>
               </form>
-              <button type="button" onClick={()=>{setIsRegistering((v)=>!v);setError(null);setMessage('');}} className="mt-4 w-full text-xs font-semibold text-primary hover:underline">{isRegistering?'Back to sign in':'Register as a student'}</button>
+              <button type="button" onClick={()=>{setIsRegistering((v)=>!v);setError(null);setMessage('');}} className="mt-4 w-full text-xs font-semibold text-primary hover:underline">{isRegistering?t('signIn'):t('register')}</button>
               <div className="mt-6 pt-5 border-t border-feather">
                 <div className="flex items-center gap-2 text-[10px] text-slate-500"><Lock className="w-3 h-3" />Institutional access · Role-based workspace</div>
                 <p className="mt-4 text-[10px] leading-relaxed text-slate-500">Isolated demo accounts only. Enter the private password supplied locally. These demo identities imply no institutional or employer affiliation.</p>

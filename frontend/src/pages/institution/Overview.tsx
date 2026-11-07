@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { institutionApi, uploadApi } from '../../api/client';
 import { InstitutionStats, UploadBatch, Programme } from '../../types';
 import { StatusChip } from '../../components/StatusChip';
+import { useLanguage } from '../../context/LanguageContext';
 import {
   Users,
   CheckCircle2,
@@ -26,6 +27,7 @@ import {
 } from 'recharts';
 
 export const InstitutionOverview: React.FC = () => {
+  const { t } = useLanguage();
   const [stats, setStats] = useState<InstitutionStats | null>(null);
   const [batches, setBatches] = useState<UploadBatch[]>([]);
   const [programmes, setProgrammes] = useState<Programme[]>([]);
@@ -54,10 +56,10 @@ export const InstitutionOverview: React.FC = () => {
   };
 
   const chartData = [
-    { name: 'Valid', count: stats?.validStudents || 0, color: '#23865B' },
-    { name: 'Pending', count: stats?.pendingStudents || 0, color: '#D99A32' },
-    { name: 'Duplicate', count: stats?.duplicateStudents || 0, color: '#718096' },
-    { name: 'Errors', count: stats?.errorStudents || 0, color: '#C64C4C' },
+    { name: t('valid'), count: stats?.validStudents || 0, color: '#23865B' },
+    { name: t('pending'), count: stats?.pendingStudents || 0, color: '#D99A32' },
+    { name: t('duplicates'), count: stats?.duplicateStudents || 0, color: '#718096' },
+    { name: t('errors'), count: stats?.errorStudents || 0, color: '#C64C4C' },
   ];
 
   return (
@@ -66,13 +68,13 @@ export const InstitutionOverview: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/90 shadow-soft">
         <div>
           <span className="text-xs font-bold text-primary tracking-wide uppercase">
-            Institutional Administration
+            {t('institutionalAdmin')}
           </span>
           <h2 className="text-2xl font-extrabold text-navy mt-0.5">
-            Admissions & APAAR Verification Overview
+            {t('admissionsOverview')}
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            Real-time validation statuses, quota utilization, and recent batch submissions
+            {t('overviewBlurb')}
           </p>
         </div>
 
@@ -82,13 +84,13 @@ export const InstitutionOverview: React.FC = () => {
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-600 text-white font-semibold text-xs shadow-md shadow-blue-500/10 transition-all hover:-translate-y-0.5"
           >
             <Upload className="w-4 h-4" />
-            <span>Upload Admissions CSV</span>
+            <span>{t('uploadCsv')}</span>
           </Link>
           <Link
             to="/institution/students/new"
             className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors"
           >
-            <span>+ Single Entry</span>
+            <span>+ {t('singleEntry')}</span>
           </Link>
         </div>
       </div>
@@ -98,74 +100,74 @@ export const InstitutionOverview: React.FC = () => {
         {/* Total */}
         <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold">Total Students</span>
+            <span className="text-xs font-semibold">{t('totalStudents')}</span>
             <Users className="w-4 h-4 text-slate-400" />
           </div>
           <div className="text-2xl font-extrabold text-navy">
             {stats ? stats.totalStudents.toLocaleString() : '—'}
           </div>
-          <span className="text-[10px] text-slate-400 mt-1">Enrolled records</span>
+          <span className="text-[10px] text-slate-400 mt-1">{t('enrolledRecords')}</span>
         </div>
 
         {/* Valid */}
         <div className="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-200/80 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between text-emerald-800 mb-2">
-            <span className="text-xs font-semibold">Valid</span>
+            <span className="text-xs font-semibold">{t('valid')}</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-2xl font-extrabold text-emerald-900">
             {stats ? stats.validStudents.toLocaleString() : '—'}
           </div>
-          <span className="text-[10px] text-emerald-700 mt-1">Verified with APAAR</span>
+          <span className="text-[10px] text-emerald-700 mt-1">{t('recordedPrototype')}</span>
         </div>
 
         {/* Pending */}
         <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-200/80 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between text-amber-800 mb-2">
-            <span className="text-xs font-semibold">Pending</span>
+            <span className="text-xs font-semibold">{t('pending')}</span>
             <Clock className="w-4 h-4 text-amber-600" />
           </div>
           <div className="text-2xl font-extrabold text-amber-900">
             {stats ? stats.pendingStudents.toLocaleString() : '—'}
           </div>
-          <span className="text-[10px] text-amber-700 mt-1">Awaiting review</span>
+          <span className="text-[10px] text-amber-700 mt-1">{t('awaitingReview')}</span>
         </div>
 
         {/* Duplicates */}
         <div className="p-4 rounded-2xl bg-purple-50/50 border border-purple-200/80 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between text-purple-800 mb-2">
-            <span className="text-xs font-semibold">Duplicates</span>
+            <span className="text-xs font-semibold">{t('duplicates')}</span>
             <AlertTriangle className="w-4 h-4 text-accent-purple" />
           </div>
           <div className="text-2xl font-extrabold text-purple-900">
             {stats ? stats.duplicateStudents.toLocaleString() : '—'}
           </div>
-          <span className="text-[10px] text-purple-700 mt-1">In file / Cross-inst</span>
+          <span className="text-[10px] text-purple-700 mt-1">{t('duplicateHint')}</span>
         </div>
 
         {/* Errors */}
         <div className="p-4 rounded-2xl bg-red-50/50 border border-red-200/80 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between text-red-800 mb-2">
-            <span className="text-xs font-semibold">Errors</span>
+            <span className="text-xs font-semibold">{t('errors')}</span>
             <AlertCircle className="w-4 h-4 text-danger" />
           </div>
           <div className="text-2xl font-extrabold text-red-900">
             {stats ? stats.errorStudents.toLocaleString() : '—'}
           </div>
-          <span className="text-[10px] text-red-700 mt-1">Format / Missing</span>
+          <span className="text-[10px] text-red-700 mt-1">{t('errorHint')}</span>
         </div>
 
         {/* Intake Utilization */}
         <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-200/80 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between text-blue-800 mb-2">
-            <span className="text-xs font-semibold">Intake Utilization</span>
+            <span className="text-xs font-semibold">{t('intakeUtilization')}</span>
             <TrendingUp className="w-4 h-4 text-primary" />
           </div>
           <div className="text-2xl font-extrabold text-navy">
             {stats ? `${stats.utilizationPercent}%` : '—'}
           </div>
           <span className="text-[10px] text-primary mt-1">
-            Cap: {stats ? stats.totalPermittedIntake : 0}
+            {t('capacity')}: {stats ? stats.totalPermittedIntake : 0}
           </span>
         </div>
       </div>
@@ -176,11 +178,11 @@ export const InstitutionOverview: React.FC = () => {
         <div className="lg:col-span-6 bg-white p-5 rounded-2xl border border-slate-200 shadow-soft">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-bold text-slate-800 text-sm">Admissions Status Breakdown</h3>
-              <p className="text-[11px] text-slate-400">Distribution across verification rules</p>
+              <h3 className="font-bold text-slate-800 text-sm">{t('statusBreakdown')}</h3>
+              <p className="text-[11px] text-slate-400">{t('statusRules')}</p>
             </div>
             <Link to="/institution/issues" className="text-xs font-semibold text-primary hover:underline flex items-center gap-1">
-              <span>View Issues</span>
+              <span>{t('viewIssues')}</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -208,7 +210,7 @@ export const InstitutionOverview: React.FC = () => {
         <div className="lg:col-span-6 bg-white p-5 rounded-2xl border border-slate-200 shadow-soft">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h3 className="font-bold text-slate-800 text-sm">Intake Capacity by Programme</h3>
+              <h3 className="font-bold text-slate-800 text-sm">{t('intakeByProgramme')}</h3>
               <p className="text-[11px] text-slate-400">AICTE Approved vs Current Enrolments</p>
             </div>
             <span className="text-[10px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
@@ -244,20 +246,21 @@ export const InstitutionOverview: React.FC = () => {
       <div className="bg-white rounded-2xl border border-slate-200 shadow-soft overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
           <div>
-            <h3 className="font-bold text-slate-800 text-sm">Recent Upload Batches</h3>
-            <p className="text-[11px] text-slate-400">Historical admission file processing logs</p>
+            <h3 className="font-bold text-slate-800 text-sm">{t('recentBatches')}</h3>
+            <p className="text-[11px] text-slate-400">{t('fileProcessing')}</p>
           </div>
           <Link
             to="/institution/upload"
             className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
           >
-            <span>Upload New Batch</span>
+            <span>{t('uploadNewBatch')}</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
         {batches.length === 0 ? (
           <div className="p-8 text-center text-slate-400 text-xs">
+            {t('noBatches')}
             <FileSpreadsheet className="w-8 h-8 mx-auto text-slate-300 mb-2" />
             No upload batches submitted yet. Click "Upload Admissions CSV" to process your first file.
           </div>

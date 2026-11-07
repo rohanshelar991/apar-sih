@@ -1,25 +1,25 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Layout } from './components/Layout';
 import { Login } from './pages/Login';
-import { InstitutionOverview } from './pages/institution/Overview';
-import { UploadStudents } from './pages/institution/UploadStudents';
-import { ValidationIssues } from './pages/institution/ValidationIssues';
-import { StudentsDirectory } from './pages/institution/StudentsDirectory';
-import { StudentForm } from './pages/institution/StudentForm';
-import { RegulatorDashboard } from './pages/regulator/Dashboard';
-import { AnomalyCenter } from './pages/regulator/AnomalyCenter';
-import { AlertsFeed } from './pages/regulator/AlertsFeed';
-import { Reports } from './pages/regulator/Reports';
-import { AuditLogs } from './pages/regulator/AuditLogs';
-import { VerifierPage } from './pages/verifier/VerifierPage';
-import { VerifyDetail } from './pages/verifier/VerifyDetail';
-import { HelpGuide } from './pages/HelpGuide';
-import { DemoPlayer } from './pages/DemoPlayer';
-import { VerificationQueue } from './pages/VerificationQueue';
-import { NotificationCenter } from './pages/NotificationCenter';
-import { StudentPortal } from './pages/student/StudentPortal';
+const InstitutionOverview = lazy(() => import('./pages/institution/Overview').then((m) => ({ default: m.InstitutionOverview })));
+const UploadStudents = lazy(() => import('./pages/institution/UploadStudents').then((m) => ({ default: m.UploadStudents })));
+const ValidationIssues = lazy(() => import('./pages/institution/ValidationIssues').then((m) => ({ default: m.ValidationIssues })));
+const StudentsDirectory = lazy(() => import('./pages/institution/StudentsDirectory').then((m) => ({ default: m.StudentsDirectory })));
+const StudentForm = lazy(() => import('./pages/institution/StudentForm').then((m) => ({ default: m.StudentForm })));
+const RegulatorDashboard = lazy(() => import('./pages/regulator/Dashboard').then((m) => ({ default: m.RegulatorDashboard })));
+const AnomalyCenter = lazy(() => import('./pages/regulator/AnomalyCenter').then((m) => ({ default: m.AnomalyCenter })));
+const AlertsFeed = lazy(() => import('./pages/regulator/AlertsFeed').then((m) => ({ default: m.AlertsFeed })));
+const Reports = lazy(() => import('./pages/regulator/Reports').then((m) => ({ default: m.Reports })));
+const AuditLogs = lazy(() => import('./pages/regulator/AuditLogs').then((m) => ({ default: m.AuditLogs })));
+const VerifierPage = lazy(() => import('./pages/verifier/VerifierPage').then((m) => ({ default: m.VerifierPage })));
+const VerifyDetail = lazy(() => import('./pages/verifier/VerifyDetail').then((m) => ({ default: m.VerifyDetail })));
+const HelpGuide = lazy(() => import('./pages/HelpGuide').then((m) => ({ default: m.HelpGuide })));
+const DemoPlayer = lazy(() => import('./pages/DemoPlayer').then((m) => ({ default: m.DemoPlayer })));
+const VerificationQueue = lazy(() => import('./pages/VerificationQueue').then((m) => ({ default: m.VerificationQueue })));
+const NotificationCenter = lazy(() => import('./pages/NotificationCenter').then((m) => ({ default: m.NotificationCenter })));
+const StudentPortal = lazy(() => import('./pages/student/StudentPortal').then((m) => ({ default: m.StudentPortal })));
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: string[] }> = ({
   children,
@@ -68,7 +68,8 @@ export const App: React.FC = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
+        <Suspense fallback={<div className="min-h-[50vh] grid place-items-center text-sm text-slate-500" role="status">Loading workspace…</div>}>
+          <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/demo" element={<DemoPlayer />} />
@@ -179,7 +180,8 @@ export const App: React.FC = () => {
 
           {/* Catch-all redirect */}
           <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </AuthProvider>
   );

@@ -123,14 +123,16 @@ JWT_SECRET=<base64-encoded-random-secret>
 
 Use the Supabase **session pooler** for Flyway/migrations. Confirm the corresponding database roles and passwords work before running migrations. The current local `.env` has not passed that check. `.env` files are ignored by Git; `.env.example` contains placeholders only.
 
-### Install and run locally
+### Run a complete local demo
 
-Requirements: Java 17, Maven 3.9+, Node.js 20+, npm, and network access to the configured PostgreSQL database.
+Requirements: Docker Compose, Java 17, Maven 3.9+, Node.js 20+, and npm. The local path uses a persistent PostgreSQL volume and does not require a hosted database account.
 
-1. Configure the ignored `backend/.env` as described above.
-2. From the repository root, start the backend and frontend with `./start-demo.sh` on macOS/Linux. The script loads `backend/.env` and refuses a missing/wrong project reference. On Windows, build with `mvn -f backend/pom.xml package`, then run `start-supabase.ps1`.
-3. To run only the frontend, use `npm --prefix frontend install` and `npm --prefix frontend run dev`. API-backed functionality requires the PostgreSQL backend.
-4. The frontend defaults to the Vite proxy in development. Set `VITE_API_BASE_URL` in the frontend environment only if the API is hosted at a different local address.
+1. Copy `backend/.env.local.example` to `backend/.env.local`.
+2. Set a unique local password in all password fields and set `JWT_SECRET` to the output of `openssl rand -base64 48`.
+3. Run `./start-local.sh` from the repository root. It starts loopback-only PostgreSQL, applies Flyway migrations, seeds synthetic demo accounts, and starts the frontend and API.
+4. Open `http://localhost:5173`. Demo account emails are shown on the sign-in page. Local synthetic seed credentials are only for this disposable demo database; see `DataSeederService` for the seeded values.
+
+The separate `./start-demo.sh` path is for the hosted Supabase demo only. It validates the approved project configuration and refuses to start when that private environment is incomplete. Do not copy hosted credentials into the local template. To run only the frontend, use `npm --prefix frontend install` and `npm --prefix frontend run dev`; API-backed workflows require a running backend.
 
 ### Flyway commands
 

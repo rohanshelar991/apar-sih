@@ -32,12 +32,17 @@
 .govt-utility-button { min-width: 1.75rem; min-height: 1.75rem; border: 1px solid #cbd5e1; border-radius: .25rem; background: #fff; color: #1e293b; display: inline-flex; align-items: center; justify-content: center; padding: .15rem .35rem; font-size: .7rem; font-weight: 700; }
 .govt-utility-button:hover, .govt-utility-button:focus-visible { background: #eaf0f7; border-color: #244b83; }
 .govt-utility-button.is-active { background: #101d35; border-color: #101d35; color: white; }
-html[data-high-contrast='true'] body { background: #fff !important; color: #000 !important; }
-html[data-high-contrast='true'] a { text-decoration: underline; text-underline-offset: .15em; }
-html[data-high-contrast='true'] :focus-visible { outline-color: #000; outline-width: 4px; }
-html[data-high-contrast='true'] .govt-utility-bar { background: #fff; border-bottom: 2px solid #000; color: #000; }
-html[data-high-contrast='true'] .govt-utility-button { border: 2px solid #000; color: #000; }
-html[data-high-contrast='true'] .govt-utility-button.is-active { background: #000; color: #fff; }
+.govt-language-select { min-height: 1.9rem; max-width: 7rem; border: 1px solid #cbd5e1; border-radius: .25rem; padding: .2rem 1.4rem .2rem .45rem; background-color: #fff; color: #17243a; font-size: .72rem; font-weight: 700; }
+.govt-language-select:focus-visible { outline: 3px solid #244b83; outline-offset: 2px; }
+html[data-theme='bright'] body { background: #fff !important; color: #0b1528 !important; }
+html[data-theme='bright'] .bg-slate-50, html[data-theme='bright'] .bg-ivory, html[data-theme='bright'] .garuda-login { background-color: #fff !important; }
+html[data-theme='bright'] .bg-white\/80, html[data-theme='bright'] .bg-white\/95 { background-color: #fff !important; }
+html[data-theme='bright'] .govt-utility-bar { background: #fff; border-color: #aeb9c8; }
+html[data-theme='bright'] .border-slate-200, html[data-theme='bright'] .border-feather { border-color: #c2ccd8; }
+html[data-theme='bright'] .text-slate-400 { color: #526174; }
+html[data-theme='bright'] .text-slate-500 { color: #334155; }
+html[data-theme='bright'] .text-slate-600 { color: #243247; }
+html[data-theme='bright'] .govt-language-select, html[data-theme='bright'] .govt-utility-button { background-color: #fff; color: #101d35; }
 
 @layer components {
   .garuda-login { background: #F8F6F0; }

@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Building2, Shield, LogOut, HelpCircle, Bell, Play, Menu, Landmark } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 
 interface NavbarProps {
   onToggleSidebar?: () => void;
@@ -9,6 +10,7 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -49,7 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
         <button
           onClick={onToggleSidebar}
           className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 lg:hidden"
-          aria-label="Toggle Navigation"
+          aria-label={t('institutionPortal')}
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -77,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
       </div>
 
       <div className="flex items-center gap-3">
-        <Link to="/notifications" aria-label="Notifications" title="Notifications" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-primary">
+        <Link to="/notifications" aria-label={t('notifications')} title={t('notifications')} className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-primary">
           <Bell className="w-4 h-4" />
         </Link>
         {/* Watch Demo Video Link */}
@@ -86,8 +88,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gold-light text-gold-dark border border-[#E8D8B7] font-bold text-xs shadow-xs hover:opacity-90 transition-opacity"
         >
           <Play className="w-3.5 h-3.5 fill-current" />
-          <span className="hidden sm:inline">Watch Demo Video</span>
-          <span className="sm:hidden">Video</span>
+          <span className="hidden sm:inline">{t('watchDemo')}</span>
+          <span className="sm:hidden">Demo</span>
         </Link>
 
         {/* Help Link */}
@@ -96,7 +98,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
           className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-primary px-2.5 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
         >
           <HelpCircle className="w-4 h-4 text-slate-400" />
-          <span>How It Works</span>
+          <span>{t('howWorks')}</span>
         </Link>
 
         {/* Role Badge */}
@@ -117,7 +119,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar }) => {
 
           <button
             onClick={handleLogout}
-            title="Log Out"
+            title={t('logout')}
             className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors ml-1"
           >
             <LogOut className="w-4 h-4" />

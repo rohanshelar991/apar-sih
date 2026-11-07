@@ -9,6 +9,7 @@ import {
   Institution,
 } from '../../types';
 import { StatusChip } from '../../components/StatusChip';
+import { useLanguage } from '../../context/LanguageContext';
 import {
   Building2,
   Users,
@@ -40,6 +41,7 @@ import {
 } from 'recharts';
 
 export const RegulatorDashboard: React.FC = () => {
+  const { t } = useLanguage();
   const [kpi, setKpi] = useState<RegulatorKpi | null>(null);
   const [institutions, setInstitutions] = useState<Institution[]>([]);
   const [selectedInstId, setSelectedInstId] = useState<string>('');
@@ -108,13 +110,13 @@ export const RegulatorDashboard: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/90 shadow-soft">
         <div>
           <span className="text-xs font-bold text-purple-700 tracking-wide uppercase">
-            Oversight workspace &bull; Demonstration environment
+            {t('oversightWorkspace')}
           </span>
           <h2 className="text-2xl font-extrabold text-navy mt-0.5">
-            Institution Intake &amp; Verification Dashboard
+            {t('intakeDashboard')}
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            Database-backed institution and programme summaries. Official APAAR verification is not connected.
+            {t('dashboardDescription')}
           </p>
         </div>
 
@@ -142,7 +144,7 @@ export const RegulatorDashboard: React.FC = () => {
         {/* Institutions */}
         <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-xs font-semibold">Institutions</span>
+            <span className="text-xs font-semibold">{t('institutions')}</span>
             <Building2 className="w-4 h-4 text-purple-600" />
           </div>
           <div className="text-2xl font-extrabold text-navy">
@@ -154,7 +156,7 @@ export const RegulatorDashboard: React.FC = () => {
         {/* Approved Intake */}
         <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-200/80 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between text-blue-800 mb-2">
-            <span className="text-xs font-semibold">Approved Intake</span>
+            <span className="text-xs font-semibold">{t('approvedIntake')}</span>
             <Award className="w-4 h-4 text-primary" />
           </div>
           <div className="text-2xl font-extrabold text-navy">
@@ -166,7 +168,7 @@ export const RegulatorDashboard: React.FC = () => {
         {/* Supernumerary Seats */}
         <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-200/80 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between text-indigo-800 mb-2">
-            <span className="text-xs font-semibold">Supernumerary</span>
+            <span className="text-xs font-semibold">{t('supernumerary')}</span>
             <Users className="w-4 h-4 text-indigo-600" />
           </div>
           <div className="text-2xl font-extrabold text-indigo-950">
@@ -178,7 +180,7 @@ export const RegulatorDashboard: React.FC = () => {
         {/* Actual Enrolment */}
         <div className="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-200/80 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between text-emerald-800 mb-2">
-            <span className="text-xs font-semibold">Actual Enrolment</span>
+            <span className="text-xs font-semibold">{t('actualEnrollment')}</span>
             <TrendingUp className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-2xl font-extrabold text-emerald-950">
@@ -190,7 +192,7 @@ export const RegulatorDashboard: React.FC = () => {
         {/* Open Exceptions */}
         <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-200/80 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between text-amber-800 mb-2">
-            <span className="text-xs font-semibold">Open Exceptions</span>
+            <span className="text-xs font-semibold">{t('openExceptions')}</span>
             <AlertTriangle className="w-4 h-4 text-amber-600" />
           </div>
           <div className="text-2xl font-extrabold text-amber-950">
@@ -202,7 +204,7 @@ export const RegulatorDashboard: React.FC = () => {
         {/* Intake Exceeded Alerts */}
         <div className="p-4 rounded-2xl bg-red-50/50 border border-red-200/80 shadow-soft flex flex-col justify-between">
           <div className="flex items-center justify-between text-red-800 mb-2">
-            <span className="text-xs font-semibold">Exceeded Quota</span>
+            <span className="text-xs font-semibold">{t('exceededQuota')}</span>
             <ShieldAlert className="w-4 h-4 text-red-600" />
           </div>
           <div className="text-2xl font-extrabold text-red-700">
